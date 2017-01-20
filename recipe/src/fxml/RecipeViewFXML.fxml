@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.text.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
+<?import java.lang.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.layout.AnchorPane?>
+
+<AnchorPane fx:controller="controller.RecipeViewController" prefHeight="800.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <ImageView fx:id="recipe_ImageView" fitHeight="550.0" fitWidth="650.0" layoutX="14.0" layoutY="14.0" pickOnBounds="true" preserveRatio="false" />
+      <TextArea fx:id="recipe_TextArea" layoutX="14.0" layoutY="571.0" prefHeight="215.0" prefWidth="650.0" />
+      <ListView fx:id="comment_ListView" layoutX="686.0" layoutY="14.0" prefHeight="450.0" prefWidth="300.0" />
+      <TextArea fx:id="comment_Text" layoutX="686.0" layoutY="474.0" prefHeight="90.0" prefWidth="255.0" />
+      <Button alignment="CENTER" layoutX="956.0" layoutY="474.0" mnemonicParsing="false" onAction="#handle_CommentBtn" prefHeight="90.0" prefWidth="30.0" text="등&#10;&#10;&#10;록" textAlignment="CENTER"/>
+      <Button layoutX="686.0" layoutY="571.0" mnemonicParsing="false" onAction="#handle_RecommendBtn" prefHeight="50.0" prefWidth="300.0" text="추                    천" />
+      <Button layoutX="686.0" layoutY="736.0" mnemonicParsing="false" onAction="#handle_CancelBtn" prefHeight="50.0" prefWidth="300.0" text="닫                    기" />
+      <Button fx:id="show_Btn" layoutX="686.0" layoutY="681.0" mnemonicParsing="false" onAction="#handle_ShowBtn" prefHeight="50.0" prefWidth="300.0" text="전     체     보     기" />
+      <Button fx:id="prior_Btn" layoutX="686.0" layoutY="626.0" mnemonicParsing="false" onAction="#handle_PriorBtn" prefHeight="50.0" prefWidth="145.0" text="이          전" />
+      <Button fx:id="next_Btn" layoutX="841.0" layoutY="626.0" mnemonicParsing="false" onAction="#handle_NextBtn" prefHeight="50.0" prefWidth="145.0" text="다          음" />
+   </children>
+</AnchorPane>

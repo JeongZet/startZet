@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.text.*?>
+<?import javafx.scene.control.*?>
+<?import java.lang.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.layout.AnchorPane?>
+
+<AnchorPane prefHeight="300.0" prefWidth="600.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8" fx:controller="controller.LoginController">
+   <children>
+      <Label layoutX="36.0" layoutY="65.0" prefHeight="30.0" prefWidth="102.0" text="I           D">
+         <font>
+            <Font size="22.0" />
+         </font>
+      </Label>
+      <Label layoutX="36.0" layoutY="141.0" prefHeight="30.0" prefWidth="102.0" text="Password">
+         <font>
+            <Font size="22.0" />
+         </font>
+      </Label>
+      <TextField fx:id="id_Text" layoutX="178.0" layoutY="64.0" prefHeight="33.0" prefWidth="365.0"  />
+      <PasswordField fx:id="pw_Text" layoutX="178.0" layoutY="140.0" prefHeight="33.0" prefWidth="365.0" />
+      <Button layoutX="171.0" layoutY="225.0" mnemonicParsing="false" onAction="#handle_LogBtn" prefHeight="30.0" prefWidth="100.0" text="로 그 인">
+         <font>
+            <Font name="System Bold" size="18.0" />
+         </font></Button>
+      <Button layoutX="36.0" layoutY="225.0" mnemonicParsing="false" onAction="#handle_RegBtn" prefHeight="30.0" prefWidth="100.0" text="회원가입">
+         <font>
+            <Font name="System Bold" size="18.0" />
+         </font></Button>
+      <Button layoutX="443.0" layoutY="225.0" mnemonicParsing="false" onAction="#handle_CancelBtn" prefHeight="30.0" prefWidth="100.0" text="나 가 기">
+         <font>
+            <Font name="System Bold" size="18.0" />
+         </font></Button>
+      <Button layoutX="307.0" layoutY="225.0" mnemonicParsing="false" onAction="#handle_SearchBtn" prefHeight="33.0" prefWidth="100.0" text="찾  기">
+         <font>
+            <Font name="System Bold" size="18.0" />
+         </font></Button>
+   </children>
+</AnchorPane>

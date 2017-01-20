@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.text.*?>
+<?import javafx.scene.control.*?>
+<?import java.lang.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.layout.AnchorPane?>
+
+<AnchorPane prefHeight="600.0" prefWidth="600.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8" fx:controller="controller.SearchController">
+   <children>
+      <Label layoutX="36.0" layoutY="39.0" prefHeight="36.0" prefWidth="228.0" text=" - I D    찾 기">
+         <font>
+            <Font size="30.0" />
+         </font>
+      </Label>
+      <Label layoutX="36.0" layoutY="141.0" prefHeight="30.0" prefWidth="102.0" text="E  -  Mail">
+         <font>
+            <Font size="22.0" />
+         </font>
+      </Label>
+      <TextField fx:id="mail1_Text" layoutX="178.0" layoutY="140.0" prefHeight="33.0" prefWidth="365.0" />
+      <Button layoutX="443.0" layoutY="200.0" mnemonicParsing="false" onAction="#handle_Search1Btn" prefHeight="33.0" prefWidth="100.0" text="찾  기">
+         <font>
+            <Font name="System Bold" size="18.0" />
+         </font></Button>
+      <Separator layoutX="14.0" layoutY="260.0" prefWidth="572.0" />
+      <Label layoutX="36.0" layoutY="300.0" prefHeight="36.0" prefWidth="228.0" text=" - P W    찾 기">
+         <font>
+            <Font size="30.0" />
+         </font>
+      </Label>
+      <TextField fx:id="id_Text" layoutX="189.0" layoutY="370.0" prefHeight="33.0" prefWidth="365.0" />
+      <Label layoutX="47.0" layoutY="370.0" prefHeight="30.0" prefWidth="102.0" text="I           D">
+         <font>
+            <Font size="22.0" />
+         </font>
+      </Label>
+      <Label layoutX="47.0" layoutY="430.0" prefHeight="30.0" prefWidth="102.0" text="E  -  Mail">
+         <font>
+            <Font size="22.0" />
+         </font>
+      </Label>
+      <TextField fx:id="mail2_Text" layoutX="189.0" layoutY="430.0" prefHeight="33.0" prefWidth="365.0" />
+      <Button layoutX="454.0" layoutY="490.0" mnemonicParsing="false" onAction="#handle_Search2Btn" prefHeight="33.0" prefWidth="100.0" text="찾  기">
+         <font>
+            <Font name="System Bold" size="18.0" />
+         </font>
+      </Button>
+      <Button layoutX="454.0" layoutY="540.0" mnemonicParsing="false" onAction="#handle_CancelBtn" prefHeight="33.0" prefWidth="100.0" text="닫  기">
+         <font>
+            <Font name="System Bold" size="18.0" />
+         </font>
+      </Button>
+   </children>
+</AnchorPane>
