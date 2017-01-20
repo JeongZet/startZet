@@ -55,7 +55,7 @@ public class RecipeServer extends Application {
 			serverSocketChannel.bind(new InetSocketAddress(5001));
 			
 			Platform.runLater(()->{
-				displayText("[¼­¹ö ½ÃÀÛ]");
+				displayText("[ì„œë²„ ì‹œìž‘]");
 				btn_StartStop.setText("Stop");
 			});
 			
@@ -63,7 +63,7 @@ public class RecipeServer extends Application {
 
 				public void completed(AsynchronousSocketChannel socketChannel, Void arg1) {
 					try{
-						String message = "[¿¬°á ¼ö¶ô : "+ socketChannel.getRemoteAddress() + " : " + Thread.currentThread().getName() + " ] ";
+						String message = "[ì—°ê²° ìˆ˜ë½ : "+ socketChannel.getRemoteAddress() + " : " + Thread.currentThread().getName() + " ] ";
 						
 						Platform.runLater(()->{
 							displayText(message);
@@ -74,7 +74,7 @@ public class RecipeServer extends Application {
 					Client client = new Client(socketChannel);
 					connections.add(client);
 					Platform.runLater(()->
-					displayText("[¿¬°á °¹¼ö : " + connections.size() + "]"));
+					displayText("[ì—°ê²° ê°¯ìˆ˜ : " + connections.size() + "]"));
 					
 					serverSocketChannel.accept(null,this);
 				}
@@ -94,7 +94,7 @@ public class RecipeServer extends Application {
 				channelGroup.shutdownNow();
 			
 			Platform.runLater(()->{
-				displayText("[¼­¹ö Á¾·á]");
+				displayText("[ì„œë²„ ì¢…ë£Œ]");
 				btn_StartStop.setText("Start");
 			});
 			
@@ -122,48 +122,48 @@ public class RecipeServer extends Application {
 						String[] datas = data.split("///");
 
 						switch(datas[0]){
-						case "·Î±×ÀÎ":
-							Platform.runLater(()->displayText("[·Î±×ÀÎ]"));
+						case "ë¡œê·¸ì¸":
+							Platform.runLater(()->displayText("[ë¡œê·¸ì¸]"));
 							loginDB(datas);
 							break;
-						case "È¸¿ø°¡ÀÔ":
-							Platform.runLater(()->displayText("[È¸¿ø°¡ÀÔ]"));
+						case "íšŒì›ê°€ìž…":
+							Platform.runLater(()->displayText("[íšŒì›ê°€ìž…]"));
 							regDB(datas);
 							break;
-						case "¾ÆÀÌµðÃ£±â":
-							Platform.runLater(()->displayText("[¾ÆÀÌµðÃ£±â]"));
+						case "ì•„ì´ë””ì°¾ê¸°":
+							Platform.runLater(()->displayText("[ì•„ì´ë””ì°¾ê¸°]"));
 							searchDB(datas);
 							break;
-						case "ºñ¹Ð¹øÈ£Ã£±â":
-							Platform.runLater(()->displayText("[ºñ¹Ð¹øÈ£Ã£±â]"));
+						case "ë¹„ë°€ë²ˆí˜¸ì°¾ê¸°":
+							Platform.runLater(()->displayText("[ë¹„ë°€ë²ˆí˜¸ì°¾ê¸°]"));
 							searchDB(datas);
 							break;
-						case "Áßº¹È®ÀÎ":
-							Platform.runLater(()->displayText("[Áßº¹È®ÀÎ]"));
+						case "ì¤‘ë³µí™•ì¸":
+							Platform.runLater(()->displayText("[ì¤‘ë³µí™•ì¸]"));
 							checkDB(datas[1]);
 							break;
-						case "¿¬°áÁ¾·á":
-							Platform.runLater(()->displayText("[¿¬°áÁ¾·á]"));
+						case "ì—°ê²°ì¢…ë£Œ":
+							Platform.runLater(()->displayText("[ì—°ê²°ì¢…ë£Œ]"));
 							fail();
 							break;
-						case "¸®½ºÆ®":
-							Platform.runLater(()->displayText("[¸®½ºÆ®]"));
+						case "ë¦¬ìŠ¤íŠ¸":
+							Platform.runLater(()->displayText("[ë¦¬ìŠ¤íŠ¸]"));
 							listDB();
 							break;
-						case "ºä":
-							Platform.runLater(()->displayText("[ºä]"));
+						case "ë·°":
+							Platform.runLater(()->displayText("[ë·°]"));
 							viewDB(datas);
 							break;
-						case "ÀÌ¹ÌÁö":
-							Platform.runLater(()->displayText("[ÀÌ¹ÌÁö Àü¼Û]"));
+						case "ì´ë¯¸ì§€":
+							Platform.runLater(()->displayText("[ì´ë¯¸ì§€ ì „ì†¡]"));
 							imageDB(datas);
 							break;
-						case "ÀüÃ¼º¸±â":
-							Platform.runLater(()->displayText("[ÀÌ¹ÌÁö Àü¼Û]"));
+						case "ì „ì²´ë³´ê¸°":
+							Platform.runLater(()->displayText("[ì´ë¯¸ì§€ ì „ì†¡]"));
 							allViewDB(datas[1]);
 							break;
-						case "ÃßÃµ":
-							Platform.runLater(()->displayText("[ÃßÃµ]"));
+						case "ì¶”ì²œ":
+							Platform.runLater(()->displayText("[ì¶”ì²œ]"));
 							recommendDB(datas);
 							break;
 						}
@@ -193,9 +193,9 @@ public class RecipeServer extends Application {
 				ResultSet rs = pstmt.executeQuery();
 				
 				if(rs.next()){
-					writeSocket("¼º°ø///"+rs.getString("USERID")+"///"+rs.getString("UGENDER")+"///"+rs.getString("UAGE"));
+					writeSocket("ì„±ê³µ///"+rs.getString("USERID")+"///"+rs.getString("UGENDER")+"///"+rs.getString("UAGE"));
 				}else{
-					writeSocket("½ÇÆÐ");
+					writeSocket("ì‹¤íŒ¨");
 				}
 				
 				closeDB(conn);
@@ -280,7 +280,7 @@ public class RecipeServer extends Application {
 					ByteBuffer imageBuffer = ByteBuffer.wrap(imageByte);
 					
 					try {
-						FileOutputStream fos = new FileOutputStream("C:\\Users\\JYH\\Documents\\Ä«Ä«¿ÀÅå ¹ÞÀº ÆÄÀÏ\\0935-server.jpg");
+						FileOutputStream fos = new FileOutputStream("C:\\Users\\JYH\\Documents\\ì¹´ì¹´ì˜¤í†¡ ë°›ì€ íŒŒì¼\\0935-server.jpg");
 
 						fos.write(imageByte, 0, (int)imageByte.length);
 						
@@ -330,7 +330,7 @@ public class RecipeServer extends Application {
 				String message= "";
 				
 				if(rs.next()){
-					message="½ÇÆÐ";
+					message="ì‹¤íŒ¨";
 				}else{
 					sql="INSERT INTO RECIPE_RECOMMEND(USERID, RNO, UGENDER, UAGE) VALUES(?, ?, ?, ?)";
 					pstmt = conn.prepareStatement(sql);
@@ -341,7 +341,7 @@ public class RecipeServer extends Application {
 					
 					int upd=pstmt.executeUpdate();
 					
-					message = "¼º°ø";
+					message = "ì„±ê³µ";
 				}
 				
 				writeSocket(message);
@@ -365,9 +365,9 @@ public class RecipeServer extends Application {
 				int row = pstmt.executeUpdate();
 				
 				if(row==1){
-					writeSocket("¼º°ø");
+					writeSocket("ì„±ê³µ");
 				}else
-					writeSocket("½ÇÆÐ");
+					writeSocket("ì‹¤íŒ¨");
 				
 				closeDB(conn);
 			}catch(Exception e){
@@ -387,9 +387,9 @@ public class RecipeServer extends Application {
 				ResultSet rs = pstmt.executeQuery();
 				
 				if(rs.next()){
-					writeSocket("ÀÖÀ½");
+					writeSocket("ìžˆìŒ");
 				}else
-					writeSocket("¾øÀ½");
+					writeSocket("ì—†ìŒ");
 				
 				closeDB(conn);
 			}catch(Exception e){
@@ -402,9 +402,9 @@ public class RecipeServer extends Application {
 			conn = connDB(conn);
 			try{
 				String sql=null;
-				if(datas[0].equals("¾ÆÀÌµðÃ£±â")){
+				if(datas[0].equals("ì•„ì´ë””ì°¾ê¸°")){
 					sql = "SELECT USERID FROM RECIPE_USER WHERE UMAIL=?";;
-				}else if(datas[0].equals("ºñ¹Ð¹øÈ£Ã£±â")){
+				}else if(datas[0].equals("ë¹„ë°€ë²ˆí˜¸ì°¾ê¸°")){
 					sql = "SELECT UPW FROM RECIPE_USER WHERE UMAIL = ? AND USERID=? ";
 				}
 				PreparedStatement pstmt = conn.prepareStatement(sql);
@@ -416,10 +416,10 @@ public class RecipeServer extends Application {
 				ResultSet rs = pstmt.executeQuery();
 				
 				if(rs.next()){
-					mailSend("·¹½ÃÇÇ ÇÁ·Î±×·¥ Ã£±â",rs.getString(1)+" ÀÔ´Ï´Ù.",datas[1]);
-					writeSocket("¼º°ø");
+					mailSend("ë ˆì‹œí”¼ í”„ë¡œê·¸ëž¨ ì°¾ê¸°",rs.getString(1)+" ìž…ë‹ˆë‹¤.",datas[1]);
+					writeSocket("ì„±ê³µ");
 				}else
-					writeSocket("½ÇÆÐ");
+					writeSocket("ì‹¤íŒ¨");
 				
 				closeDB(conn);
 			}catch(Exception e){
@@ -440,7 +440,7 @@ public class RecipeServer extends Application {
 	         
 	        Authenticator auth = new Authenticator(){
 	            protected PasswordAuthentication getPasswordAuthentication() {
-	                return new PasswordAuthentication("jyh050211@gmail.com", "wjd091123");
+	                return new PasswordAuthentication("************", "*********");
 	            }
 	        };
 	    
@@ -531,7 +531,7 @@ public class RecipeServer extends Application {
 		
 		void fail(){
 			try{
-				String message = "[Å¬¶óÀÌ¾ðÆ® Åë½Å ¾ÈµÊ : "+socketChannel.getRemoteAddress() + " : "+ Thread.currentThread().getName() + "]";
+				String message = "[í´ë¼ì´ì–¸íŠ¸ í†µì‹  ì•ˆë¨ : "+socketChannel.getRemoteAddress() + " : "+ Thread.currentThread().getName() + "]";
 				Platform.runLater(()->{
 					displayText(message);
 				});
