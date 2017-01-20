@@ -46,7 +46,7 @@ public class RecipeServer extends Application {
 	AsynchronousChannelGroup channelGroup;
 	AsynchronousServerSocketChannel serverSocketChannel;
 	List<Client> connections = new Vector<Client>();
-
+	Identification identification = new Identification();
 	
 	void startServer(){
 		try{
@@ -440,7 +440,7 @@ public class RecipeServer extends Application {
 	         
 	        Authenticator auth = new Authenticator(){
 	            protected PasswordAuthentication getPasswordAuthentication() {
-	                return new PasswordAuthentication("jyh050211@gmail.com", "wjd091123");
+	                return new PasswordAuthentication(identification.getmailId() , identification.getmailPW());
 	            }
 	        };
 	    
@@ -448,7 +448,7 @@ public class RecipeServer extends Application {
 	        
 	        try{
 		        MimeMessage message = new MimeMessage(session);
-		        message.setSender(new InternetAddress("jyh050211@gmail.com"));
+		        message.setSender(new InternetAddress(identification.getmailId()));
 		        message.setSubject(title);
 		 
 		        message.setRecipient(Message.RecipientType.TO, new InternetAddress(receiver));
@@ -478,7 +478,7 @@ public class RecipeServer extends Application {
 		Connection connDB(Connection conn){
 			try{
 				Class.forName("oracle.jdbc.OracleDriver");
-				conn = DriverManager.getConnection("jdbc:oracle:thin:@121.181.123.16:1521:orcl", "jyh", "0911");
+				conn = DriverManager.getConnection("jdbc:oracle:thin:@"+identification.getdbIP(), identification.getdbId() , identification.getdbPassword());
 				
 			}catch(Exception e){
 				e.printStackTrace();
