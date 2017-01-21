@@ -1,7 +1,5 @@
 package recipeServer;
 
-import java.io.FileOutputStream;
-import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.nio.ByteBuffer;
 import java.nio.channels.AsynchronousChannelGroup;
@@ -166,6 +164,14 @@ public class RecipeServer extends Application {
 							Platform.runLater(()->displayText("[추천]"));
 							recommendDB(datas);
 							break;
+						case "댓글등록":
+							Platform.runLater(()->displayText("[댓글등록]"));
+							commentDB(datas);
+							break;
+						case "댓글보기":
+							Platform.runLater(()->displayText("[댓글보기]"));
+							commentViewDB(datas[1]);
+							break;
 						}
 					}catch(Exception e){}
 					ByteBuffer read_Buffer = ByteBuffer.allocate(500);
@@ -279,15 +285,6 @@ public class RecipeServer extends Application {
 					imageByte = sImage.getBytes(1, (int)sImage.length());
 					ByteBuffer imageBuffer = ByteBuffer.wrap(imageByte);
 					
-					try {
-						FileOutputStream fos = new FileOutputStream("C:\\Users\\JYH\\Documents\\카카오톡 받은 파일\\0935-server.jpg");
-
-						fos.write(imageByte, 0, (int)imageByte.length);
-						
-						fos.close();
-					} catch (IOException e) {
-						e.printStackTrace();
-					}
 					socketChannel.write(imageBuffer);
 				}
 				closeDB(conn);
@@ -306,7 +303,7 @@ public class RecipeServer extends Application {
 				ResultSet rs = pstmt.executeQuery();
 				String message= "";
 				
-				if(rs.next()){
+				while(rs.next()){
 					message += rs.getString("SCONTENT") + "\n";
 				}
 				
@@ -322,9 +319,10 @@ public class RecipeServer extends Application {
 			Connection conn = null;
 			conn = connDB(conn);
 			try{
-				String sql = "SELECT USERID FROM RECIPE_RECOMMEND WHERE USERID=?";
+				String sql = "SELECT USERID FROM RECIPE_RECOMMEND WHERE USERID=? AND RNO=?";
 				PreparedStatement pstmt = conn.prepareStatement(sql);
 				pstmt.setString(1, datas[1]);
+				pstmt.setInt(2, Integer.parseInt(datas[2]));
 				
 				ResultSet rs = pstmt.executeQuery();
 				String message= "";
@@ -341,13 +339,75 @@ public class RecipeServer extends Application {
 					
 					int upd=pstmt.executeUpdate();
 					
-					message = "성공";
+					if(upd==1)
+						message = "성공";
 				}
 				
 				writeSocket(message);
 				
 				closeDB(conn);
 			}catch(Exception e){e.printStackTrace();}
+			
+		}
+		
+		void commentDB(String ...datas ){
+			Connection conn = null;
+			conn = connDB(conn);
+			
+			try{
+				
+				String sql = "INSERT INTO RECIPE_COMMENT(USERID,RNO,CCONTENT) VALUES(?,?,?)";
+				PreparedStatement pstmt = conn.prepareStatement(sql);
+				
+				pstmt.setString(1, datas[1]);
+				pstmt.setInt(2, Integer.parseInt(datas[2]));
+				pstmt.setString(3, datas[3]);
+				
+				int upd = pstmt.executeUpdate();
+				
+				if(upd==1){
+					writeSocket("성공");
+				}
+				
+				closeDB(conn);
+				
+			}catch(Exception e){
+				e.printStackTrace();
+			}
+			
+		}
+		
+		void commentViewDB(String data){
+		
+			Connection conn = null;
+			conn = connDB(conn);
+			
+			try{
+				
+				String sql = "SELECT USERID, CCONTENT FROM RECIPE_COMMENT WHERE RNO = ?";
+				PreparedStatement pstmt = conn.prepareStatement(sql);
+				pstmt.setInt(1, Integer.parseInt(data));
+				
+				ResultSet rs = pstmt.executeQuery();
+				
+				String message = "";
+				
+				if(rs.next()){
+					message+= rs.getString("USERID")+"///"+rs.getString("CCONTENT")+"///";
+					while(rs.next()){
+						
+						message+= rs.getString("USERID")+"///"+rs.getString("CCONTENT")+"///";
+						
+					}
+				}else
+					message="실패";
+					
+				writeSocket(message);
+				
+				closeDB(conn);
+			}catch(Exception e){
+				e.printStackTrace();
+			}
 			
 		}
 		

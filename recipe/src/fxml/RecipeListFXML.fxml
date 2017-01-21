@@ -52,7 +52,7 @@
             <Font name="System Bold" size="20.0" />
          </font>
       </TextField>
-      <Button layoutX="797.0" layoutY="734.0" mnemonicParsing="false" prefHeight="30.0" text="요  리  등  록">
+      <Button layoutX="797.0" layoutY="734.0" mnemonicParsing="false" onAction="#handle_RegBtn" prefHeight="30.0" text="요  리  등  록">
          <font>
             <Font name="System Bold" size="20.0" />
          </font>

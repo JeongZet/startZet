@@ -1,5 +1,6 @@
 package controller;
 
+import java.awt.RenderingHints.Key;
 import java.net.URL;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -17,6 +18,7 @@ import javafx.scene.control.TableRow;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.input.KeyCode;
 import source.Recipe;
 import source.Sessions;
 
@@ -68,6 +70,12 @@ public class RecipeListController implements Initializable {
 			}
 		});
 		
+		search_Text.setOnKeyPressed(event->{
+			if(event.getCode().equals(KeyCode.ENTER)){
+				handle_SearchBtn();
+			}
+		});
+		
 		tableView.setRowFactory(tc->{
 			TableRow row = new TableRow();
 			row.setOnMouseClicked(event->{
@@ -89,7 +97,7 @@ public class RecipeListController implements Initializable {
 	
 	public void setSession(Sessions sessions){
 		this.sessions = sessions;
-		String data=sessions.readSocket(2000);
+		String data=sessions.readSocket(3000);
 	
 		datas = data.split("///");
 		setKind(datas);
@@ -136,6 +144,10 @@ public class RecipeListController implements Initializable {
 			}
 		}
 		tableView.setItems(tempList);
+	}
+	
+	public void handle_RegBtn(){
+		sessions.alterStage("µî·Ï");
 	}
 	
 	public void handle_LogoutBtn(){

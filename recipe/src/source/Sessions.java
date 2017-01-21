@@ -10,11 +10,7 @@ import java.nio.charset.Charset;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
-import controller.LoginController;
-import controller.RecipeListController;
-import controller.RecipeViewController;
-import controller.RegisterController;
-import controller.SearchController;
+import controller.*;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -179,6 +175,12 @@ public class Sessions {
 		case "뷰" :
 			filename="RecipeView";
 			break;
+		case "등록":
+			filename="RecipeRegister";
+			break;
+		case "장면등록":
+			filename="SceneRegister";
+			break;
 		}
 		
 	}
@@ -205,6 +207,15 @@ public class Sessions {
 		case "뷰" :
 			RecipeViewController view_Con = loader.getController();
 			view_Con.setSession(Sessions.this);
+			break;
+		case "등록":
+			RecipeRegisterController recipeReg_Con = loader.getController();
+			recipeReg_Con.setSession(Sessions.this);
+			break;
+		case "장면등록":
+			SceneRegisterController sceneReg_Con = loader.getController();
+			sceneReg_Con.setSession(Sessions.this);
+			break;
 		}
 	}
 	
