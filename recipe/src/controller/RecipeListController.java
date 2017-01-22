@@ -98,7 +98,7 @@ public class RecipeListController implements Initializable {
 	public void setSession(Sessions sessions){
 		this.sessions = sessions;
 		String data=sessions.readSocket(3000);
-	
+		
 		datas = data.split("///");
 		setKind(datas);
 		setAll();

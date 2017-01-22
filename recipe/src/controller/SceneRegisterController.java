@@ -6,7 +6,6 @@ import java.net.URL;
 import java.nio.ByteBuffer;
 import java.nio.file.Files;
 import java.util.ResourceBundle;
-import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 
 import javafx.fxml.FXML;
@@ -31,7 +30,7 @@ public class SceneRegisterController implements Initializable {
 	@FXML private TextField filePath_Text;
 	@FXML private Label page_Label;
 	private Sessions session;
-	private int nowScene=1;;
+	private int nowScene=1;
 	private int scene;
 	private ByteBuffer imageBuffer;
 	
@@ -43,11 +42,8 @@ public class SceneRegisterController implements Initializable {
 	public void setSession(Sessions session){
 		this.session=session;
 		scene=session.getRecipe().getScene();
-		
-		if(nowScene==scene){
-			next_Btn.setDisable(true);
-			register_Btn.setDisable(true);
-		}
+		buttonSetting();
+		pageSetting(nowScene,scene);
 	}
 	
 	public void handle_PathFindBtn() throws IOException{
@@ -63,29 +59,68 @@ public class SceneRegisterController implements Initializable {
 		}
 	}
 	
-	public void send_SceneData(){
+	private void send_SceneData(String state){
 		
 		try{
-		session.writeSocket("씬등록///"+session.getRecipe().getRNo()+"///"+recipe_TextArea.getText());
+		session.writeSocket("장면등록///"+session.getRecipe().getRNo()+"///"+nowScene+"///"+recipe_TextArea.getText()+"///"+imageBuffer.capacity()+"///"+state);
 		
-		Future<Integer> write_Future = session.getSocketChannel().write(imageBuffer);
-		write_Future.get();
+		String message = session.readSocket(10);
+		
+		if(message.equals("성공")){
+		
+			Future<Integer> write_Future = session.getSocketChannel().write(imageBuffer);
+			write_Future.get();
+			
+		}
 		}catch(Exception e){}
 	}
 	
-	public void handle_RegisterBtn(){
+	private void buttonSetting(){
+		recipe_ImageView.setImage(null);
+		filePath_Text.setText("");
+		if(nowScene==scene){
+			next_Btn.setDisable(true);
+			register_Btn.setDisable(false);
+		}else{
+			next_Btn.setDisable(false);
+			register_Btn.setDisable(true);
+		}
 		
+		if(nowScene==1){
+			prior_Btn.setDisable(true);
+		}else{
+			prior_Btn.setDisable(false);
+		}
+		pageSetting(nowScene,scene);
+	}
+	
+	private void pageSetting(int nowScene, int Scene){
+		page_Label.setText(nowScene + " / " + Scene);
+	}
+	
+	public void handle_RegisterBtn(){
+		send_SceneData("commit");
+		session.writeSocket("리스트");
+		session.alterStage("리스트");
 	}
 	
 	public void handle_NextBtn(){
+		send_SceneData("default");
+		
+		nowScene+=1;
+		buttonSetting();
 		
 	}
 
 	public void handle_PriorBtn(){
+		nowScene-=1;
+		buttonSetting();
 		
 	}
 	
 	public void handle_CancelBtn(){
+		send_SceneData("rollback");
+		
 		session.alterStage("등록");
 	}
 

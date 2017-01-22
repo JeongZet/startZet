@@ -30,11 +30,14 @@ public class RecipeRegisterController implements Initializable {
 		if(!name_Text.getText().equals("")&&
 				!kind_Text.getText().equals("")&&
 				!scene_Text.getText().equals("")&&
-				!item_Text.getText().equals(""))
-		{
+				!item_Text.getText().equals("")){
 			Recipe recipe= new Recipe(session.getUser().getID(), name_Text.getText(), item_Text.getText(), kind_Text.getText(), "0", "0");
 			session.setRecipe(recipe);
 			session.getRecipe().setScene(Integer.parseInt(scene_Text.getText()));
+			
+			session.writeSocket("레시피등록///"+name_Text.getText()+"///"+kind_Text.getText()+"///"+item_Text.getText()+"///"+session.getUser().getID());
+			
+			session.getRecipe().setRNo(Integer.parseInt(session.readSocket(5)));
 			
 			session.alterStage("장면등록");
 		

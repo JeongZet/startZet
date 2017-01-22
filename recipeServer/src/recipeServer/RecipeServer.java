@@ -1,5 +1,7 @@
 package recipeServer;
 
+import java.io.ByteArrayInputStream;
+import java.io.InputStream;
 import java.net.InetSocketAddress;
 import java.nio.ByteBuffer;
 import java.nio.channels.AsynchronousChannelGroup;
@@ -7,6 +9,7 @@ import java.nio.channels.AsynchronousServerSocketChannel;
 import java.nio.channels.AsynchronousSocketChannel;
 import java.nio.channels.CompletionHandler;
 import java.nio.charset.Charset;
+import java.sql.Blob;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -15,6 +18,7 @@ import java.util.List;
 import java.util.Properties;
 import java.util.Vector;
 import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 
 import javax.activation.CommandMap;
 import javax.activation.MailcapCommandMap;
@@ -37,6 +41,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.TextArea;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
+import oracle.jdbc.internal.OracleResultSet;
 import oracle.sql.BLOB;
 
 public class RecipeServer extends Application {
@@ -172,9 +177,17 @@ public class RecipeServer extends Application {
 							Platform.runLater(()->displayText("[댓글보기]"));
 							commentViewDB(datas[1]);
 							break;
+						case "레시피등록":
+							Platform.runLater(()->displayText("[레시피등록]"));
+							recipeRegDB(datas);
+							break;
+						case "장면등록":
+							Platform.runLater(()->displayText("[장면등록]"));
+							sceneRegDB(datas);
+							break;
 						}
 					}catch(Exception e){}
-					ByteBuffer read_Buffer = ByteBuffer.allocate(500);
+					ByteBuffer read_Buffer = ByteBuffer.allocate(1000);
 					socketChannel.read(read_Buffer, read_Buffer, this);
 				}
 
@@ -215,7 +228,7 @@ public class RecipeServer extends Application {
 			Connection conn = null;
 			conn = connDB(conn);
 			try{
-				String sql = "SELECT RNO,USERID, RNAME, RITEMS, RKIND, RRECOMMEND, RCOMMENT, RSCENE FROM RECIPE_RECIPE WHERE RCHECK='1'";
+				String sql = "SELECT RNO,USERID, RNAME, RITEMS, RKIND, RRECOMMEND, RCOMMENT, RSCENE FROM RECIPE_RECIPE";
 				PreparedStatement pstmt = conn.prepareStatement(sql);
 
 				ResultSet rs = pstmt.executeQuery();
@@ -411,6 +424,108 @@ public class RecipeServer extends Application {
 			
 		}
 		
+		void recipeRegDB(String[] datas){
+			Connection conn = null;
+			conn = connDB(conn);
+			
+			try{
+				String sql = "INSERT INTO RECIPE_RECIPE(RNAME, RKIND, RITEMS, USERID) VALUES(?, ?, ?, ?)";
+				PreparedStatement pstmt = conn.prepareStatement(sql, new String[]{"RNO"});
+				pstmt.setString(1, datas[1]);
+				pstmt.setString(2, datas[2]);
+				pstmt.setString(3, datas[3]);
+				pstmt.setString(4, datas[4]);
+				
+				int upd = pstmt.executeUpdate();
+				
+				if(upd==1){
+					ResultSet rs = pstmt.getGeneratedKeys();
+					if(rs.next()){
+						int aiValue = rs.getInt(1);
+						writeSocket(Integer.toString(aiValue));
+					}
+				}
+			}catch(Exception e){e.printStackTrace();}
+		}
+		
+		void sceneRegDB(String[] datas){
+			Connection conn = null;
+			conn = connDB(conn);
+		
+			try{
+				if(!datas[5].equals("rollback")){
+					conn.setAutoCommit(false);
+					String sql = "SELECT SNO FROM RECIPE_SCENE WHERE RNO=? AND SNO =? ";
+					PreparedStatement pstmt = conn.prepareStatement(sql);
+					pstmt.setString(1, datas[1]);
+					pstmt.setString(2, datas[2]);
+					
+					ResultSet rs = pstmt.executeQuery();
+	
+					if(rs.next()){
+						sql = "UPDATE RECIPE_SCENE SET SCONTENT=?, SIMAGE=empty_blob() WHERE RNO=? AND SNO=?";
+						pstmt = conn.prepareStatement(sql);
+						pstmt.setString(1, datas[3]);
+						pstmt.setString(2, datas[1]);
+						pstmt.setString(3, datas[2]);
+						
+					}else{
+						sql = "INSERT INTO RECIPE_SCENE(RNO, SNO, SCONTENT,SIMAGE) VALUES(?, ?, ?,empty_blob())";
+						pstmt = conn.prepareStatement(sql);
+						pstmt.setString(1, datas[1]);
+						pstmt.setString(2, datas[2]);
+						pstmt.setString(3, datas[3]);
+					}
+					
+					pstmt.executeUpdate();
+					
+					writeSocket("성공");
+					
+					ByteBuffer imageBuffer = ByteBuffer.allocate(Integer.parseInt(datas[4]));
+	
+					Future<Integer> read_Future = socketChannel.read(imageBuffer);
+					read_Future.get();
+					imageBuffer.flip();
+					byte[] imageByte = imageBuffer.array();
+					
+					InputStream is = new ByteArrayInputStream(imageByte);
+					
+					sql = "SELECT SIMAGE FROM RECIPE_SCENE WHERE RNO=? AND SNO=? FOR UPDATE";
+					pstmt=conn.prepareStatement(sql);
+					pstmt.setString(1, datas[1]);
+					pstmt.setString(2, datas[2]);
+					rs = pstmt.executeQuery();
+					rs.next();
+					BLOB blob = ((OracleResultSet)rs).getBLOB("SIMAGE");
+					
+					long position =1;
+					int bytesRead=0;
+					
+					byte[] byteBuffer = new byte[blob.getChunkSize()];
+					
+					while((bytesRead = is.read(byteBuffer))!=-1){
+						blob.putBytes(position, byteBuffer, bytesRead);
+						position += bytesRead;
+					}
+					is.close();
+					conn.commit();
+			
+				}else{
+					writeSocket("롤백");
+					String sql = "DELETE RECIPE_RECIPE WHERE RNO = ?";
+					PreparedStatement pstmt = conn.prepareStatement(sql);
+					pstmt.setString(1, datas[1]);
+					pstmt.executeUpdate();
+					conn.commit();
+				}
+			
+			}catch(Exception e){
+				e.printStackTrace();
+			}
+				closeDB(conn);
+			
+		}
+		
 		void regDB(String ... datas){
 			Connection conn = null;
 			conn = connDB(conn);
@@ -562,7 +677,6 @@ public class RecipeServer extends Application {
 					attachment.flip();
 					Charset charset = Charset.forName("UTF-8");
 					message = charset.decode(attachment).toString();
-					System.out.println(message);
 				}
 
 				public void failed(Throwable arg0, ByteBuffer arg1) {

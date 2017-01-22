@@ -88,37 +88,13 @@ public class RecipeViewController implements Initializable {
 			
 			InputStream is = new ByteArrayInputStream(imageByte);
 			
-			BufferedInputStream bis = new BufferedInputStream(is);
-			
-			Image image = new Image(bis);
+			Image image = new Image(is);
 			recipe_ImageView.setImage(image);
 			
 		}
 		catch(Exception e){
 			if(session.getSocketChannel().isOpen()) session.stopSession();
 		}
-		
-		
-		/*session.getSocketChannel().read(imageBuffer, imageBuffer , new CompletionHandler<Integer, ByteBuffer>(){
-
-			public void completed(Integer result, ByteBuffer attachment) {
-				attachment.flip();
-				byte[] imageByte = attachment.array();
-				
-				InputStream is = new ByteArrayInputStream(imageByte);
-				
-				BufferedInputStream bis = new BufferedInputStream(is);
-				
-				Image image = new Image(bis);
-				recipe_ImageView.setImage(image);
-			}
-
-			public void failed(Throwable exc, ByteBuffer attachment) {
-				exc.printStackTrace();
-			}
-		});*/
-		
-		//view_Comment();
 		
 	}
 	
@@ -128,7 +104,7 @@ public class RecipeViewController implements Initializable {
 		
 		session.writeSocket("´ñ±Ûº¸±â///"+session.getRecipe().getRNo());
 		
-		String data = session.readSocket(1000);
+		String data = session.readSocket(10000);
 		
 		if(data.equals("½ÇÆÐ")){
 			commentList.add(new CommentContent("´ñ±Û ¾øÀ½",""));
