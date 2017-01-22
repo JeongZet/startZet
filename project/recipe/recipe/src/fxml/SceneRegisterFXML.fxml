@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.text.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
+<?import java.lang.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.layout.AnchorPane?>
+
+<AnchorPane prefHeight="800.0" prefWidth="788.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.SceneRegisterController">
+   <children>
+      <ImageView fx:id="recipe_ImageView" fitHeight="550.0" fitWidth="650.0" layoutX="14.0" layoutY="69.0" pickOnBounds="true" preserveRatio="false" />
+      <TextArea fx:id="recipe_TextArea" layoutX="14.0" layoutY="627.0" prefHeight="163.0" prefWidth="650.0" />
+      <Button layoutX="686.0" layoutY="740.0" mnemonicParsing="false" onAction="#handle_CancelBtn" prefHeight="50.0" prefWidth="91.0" text="닫          기" />
+      <Button fx:id="prior_Btn" layoutX="686.0" layoutY="630.0" mnemonicParsing="false" onAction="#handle_PriorBtn" prefHeight="50.0" prefWidth="91.0" text="이          전" />
+      <Button fx:id="next_Btn" layoutX="686.0" layoutY="685.0" mnemonicParsing="false" onAction="#handle_NextBtn" prefHeight="50.0" prefWidth="91.0" text="다          음" />
+      <TextField fx:id="filePath_Text" layoutX="14.0" layoutY="28.0" prefHeight="23.0" prefWidth="545.0" promptText="파일 경로" />
+      <Button layoutX="573.0" layoutY="28.0" mnemonicParsing="false" onAction="#handle_PathFindBtn" prefHeight="23.0" prefWidth="91.0" text="찾 아 보 기">
+         <font>
+            <Font name="System Bold" size="12.0" />
+         </font>
+      </Button>
+      <Label fx:id="page_Label" alignment="BASELINE_RIGHT" layoutX="713.0" layoutY="32.0" prefHeight="15.0" prefWidth="64.0" text="총 페이지" />
+      <Button fx:id="register_Btn" layoutX="686.0" layoutY="575.0" mnemonicParsing="false" onAction="#handle_RegisterBtn" prefHeight="50.0" prefWidth="91.0" text="등          록" />
+   </children>
+</AnchorPane>

@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.text.*?>
+<?import javafx.scene.control.*?>
+<?import java.lang.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.layout.AnchorPane?>
+
+<AnchorPane prefHeight="800.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.RecipeListController">
+   <children>
+      <Label contentDisplay="RIGHT" layoutX="43.0" layoutY="57.0" prefHeight="30.0" text="종      류     ">
+         <font>
+            <Font name="System Bold" size="20.0" />
+         </font>
+         <graphic>
+            <ComboBox fx:id="kind_ComboBox" prefHeight="30.0" prefWidth="150.0">
+               <opaqueInsets>
+                  <Insets left="20.0" />
+               </opaqueInsets>
+            </ComboBox>
+         </graphic>
+      </Label>
+      <Button layoutX="436.0" layoutY="55.0" mnemonicParsing="false" prefHeight="30.0" text="선  호  도">
+         <font>
+            <Font name="System Bold" size="20.0" />
+         </font>
+      </Button>
+      <Button layoutX="603.0" layoutY="55.0" mnemonicParsing="false" prefHeight="30.0" text="도 전!   요 리">
+         <font>
+            <Font name="System Bold" size="20.0" />
+         </font>
+      </Button>
+      <TableView fx:id="tableView" fixedCellSize="0.0" layoutX="43.0" layoutY="123.0" prefHeight="587.0" prefWidth="900.0">
+        <columns>
+          <TableColumn maxWidth="100.0" minWidth="100.0" prefWidth="100.0" style="-fx-alignment:CENTER;" text="작성자" />
+          <TableColumn maxWidth="200.0" minWidth="200.0" prefWidth="200.0" style="-fx-alignment:CENTER;" text="요리 이름" />
+            <TableColumn maxWidth="430.0" minWidth="430.0" prefWidth="430.0" style="-fx-alignment:CENTER;" text="요리 재료" />
+            <TableColumn maxWidth="70.0" minWidth="70.0" prefWidth="70.0" style="-fx-alignment:CENTER;" text="종류" />
+            <TableColumn maxWidth="50.0" minWidth="50.0" prefWidth="50.0" style="-fx-alignment:CENTER;" text="추천" />
+            <TableColumn maxWidth="50.0" minWidth="50.0" prefWidth="50.0" style="-fx-alignment:CENTER;" text="댓글" />
+        </columns>
+      </TableView>
+      <Button layoutX="590.0" layoutY="734.0" mnemonicParsing="false" onAction="#handle_SearchBtn" prefHeight="30.0" text="검      색">
+         <font>
+            <Font name="System Bold" size="20.0" />
+         </font>
+      </Button>
+      <TextField fx:id="search_Text" layoutX="43.0" layoutY="734.0" prefHeight="39.0" prefWidth="533.0">
+         <font>
+            <Font name="System Bold" size="20.0" />
+         </font>
+      </TextField>
+      <Button layoutX="797.0" layoutY="734.0" mnemonicParsing="false" onAction="#handle_RegBtn" prefHeight="30.0" text="요  리  등  록">
+         <font>
+            <Font name="System Bold" size="20.0" />
+         </font>
+      </Button>
+      <Button layoutX="797.0" layoutY="55.0" mnemonicParsing="false" onAction="#handle_LogoutBtn" prefHeight="30.0" text="로  그  아  웃">
+         <font>
+            <Font name="System Bold" size="20.0" />
+         </font>
+      </Button>
+   </children>
+</AnchorPane>
