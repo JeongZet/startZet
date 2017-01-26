@@ -66,7 +66,7 @@ public class LoginController implements Initializable {
 			User user = new User(datas[1], datas[2], datas[3]);
 			sessions.setUser(user);
 			
-			sessions.writeSocket("리스트");
+			sessions.writeSocket("리스트///1");
 			sessions.alterStage("리스트");
 		}else{
 			sessions.popup("아이디나 패스워드가 틀립니다.");

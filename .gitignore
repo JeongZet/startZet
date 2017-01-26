@@ -6,3 +6,6 @@
 *.jar
 *.prefs
 *.gitignore
+*.jsdtscope
+*.container
+*.name

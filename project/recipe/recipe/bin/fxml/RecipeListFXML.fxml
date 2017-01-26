@@ -27,7 +27,7 @@
             <Font name="System Bold" size="20.0" />
          </font>
       </Button>
-      <Button layoutX="603.0" layoutY="55.0" mnemonicParsing="false" prefHeight="30.0" text="도 전!   요 리">
+      <Button fx:id="btn_Alter" layoutX="603.0" layoutY="55.0" mnemonicParsing="false" onAction="#handle_AlterBtn" prefHeight="30.0" text="도 전!   요 리">
          <font>
             <Font name="System Bold" size="20.0" />
          </font>

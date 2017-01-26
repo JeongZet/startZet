@@ -212,7 +212,7 @@ public class RecipeViewController implements Initializable {
 	}
 
 	public void handle_CancelBtn(){
-		session.writeSocket("리스트");
+		session.writeSocket("리스트///1");
 		session.alterStage("리스트");
 	}
 	

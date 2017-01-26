@@ -22,6 +22,7 @@ public class PreferenceController implements Initializable {
 	@FXML ComboBox<String> gender_ComboBox;
 	@FXML TableView<Recipe> tableView;
 	private Sessions session;
+	private ObservableList<Recipe> recipeList = FXCollections.observableArrayList();
 	
 	public void setSession(Sessions session){
 		this.session=session;
@@ -34,22 +35,50 @@ public class PreferenceController implements Initializable {
 		
 		TableColumn tcUserID = tableView.getColumns().get(0);
 		TableColumn tcRName = tableView.getColumns().get(1);
-		TableColumn tcRItem = tableView.getColumns().get(2);
+		TableColumn tcRItems = tableView.getColumns().get(2);
 		TableColumn tcRKind = tableView.getColumns().get(3);
 		TableColumn tcRRecommend = tableView.getColumns().get(4);
 		TableColumn tcRComment = tableView.getColumns().get(5);
 
-		tcUserID.setCellValueFactory(new PropertyValueFactory("작성자"));
-		tcRName.setCellValueFactory(new PropertyValueFactory("요리 이름"));
-		tcRItem.setCellValueFactory(new PropertyValueFactory("요리 재료"));
-		tcRKind.setCellValueFactory(new PropertyValueFactory("종류"));
-		tcRRecommend.setCellValueFactory(new PropertyValueFactory("추천"));
-		tcRComment.setCellValueFactory(new PropertyValueFactory("댓글"));
+		tcUserID.setCellValueFactory(new PropertyValueFactory("userID"));
+		tcRName.setCellValueFactory(new PropertyValueFactory("rName"));
+		tcRItems.setCellValueFactory(new PropertyValueFactory("rItems"));
+		tcRKind.setCellValueFactory(new PropertyValueFactory("rKind"));
+		tcRRecommend.setCellValueFactory(new PropertyValueFactory("rRecommend"));
+		tcRComment.setCellValueFactory(new PropertyValueFactory("rComment"));
+			
+		tableView.setItems(recipeList);
 		
 		age_ComboBox.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<String>(){
 
 			public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
-				session.writeSocket("선호도///"+newValue);
+				recipeList.clear();
+				session.writeSocket("선호도///"+newValue+"///"+gender_ComboBox.getSelectionModel().selectedItemProperty().getValue());
+
+				String data = session.readSocket(1000);
+				String[] datas = data.split("///");
+				if(!datas[0].equals("없음")){
+					for(int i=0;i<datas.length;i+=6){
+						recipeList.add(new Recipe(datas[i], datas[i+1], datas[i+2], datas[i+3], datas[i+4], datas[i+5]));
+					}
+					tableView.setItems(recipeList);
+				}
+			}
+		});
+		
+		gender_ComboBox.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<String>(){
+
+			public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
+				recipeList.clear();
+				session.writeSocket("선호도///"+age_ComboBox.getSelectionModel().selectedItemProperty().getValue()+"///"+newValue);
+				String data = session.readSocket(1000);
+				String[] datas = data.split("///");
+				if(!datas[0].equals("없음")){
+					for(int i=0;i<datas.length;i+=6){
+						recipeList.add(new Recipe(datas[i], datas[i+1], datas[i+2], datas[i+3], datas[i+4], datas[i+5]));
+					}
+					tableView.setItems(recipeList);
+				}
 			}
 			
 		});
@@ -72,8 +101,8 @@ public class PreferenceController implements Initializable {
 			genderList.add(datas[i+1]);
 		}
 		
-		ageList.add("전부보기");
-		genderList.add("전부보기");
+		ageList.add("전체 보기");
+		genderList.add("전체 보기");
 
 		age_ComboBox.setItems(ageList);
 		gender_ComboBox.setItems(genderList);
@@ -82,7 +111,7 @@ public class PreferenceController implements Initializable {
 	
 	public void handle_PriorBtn(){
 
-		session.writeSocket("리스트");
+		session.writeSocket("리스트///1");
 		session.alterStage("리스트");
 	}
 	

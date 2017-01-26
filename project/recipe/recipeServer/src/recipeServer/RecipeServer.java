@@ -151,7 +151,7 @@ public class RecipeServer extends Application {
 							break;
 						case "리스트":
 							Platform.runLater(()->displayText("[리스트]"));
-							listDB();
+							listDB(datas[1]);
 							break;
 						case "뷰":
 							Platform.runLater(()->displayText("[뷰]"));
@@ -191,7 +191,7 @@ public class RecipeServer extends Application {
 							break;
 						case "선호도":
 							Platform.runLater(()->displayText("[선호도]"));
-							preferenceDB(datas[1]);
+							preferenceDB(datas);
 							break;
 						}
 					}catch(Exception e){}
@@ -231,25 +231,35 @@ public class RecipeServer extends Application {
 			}
 		}
 
-		void listDB(){
+		void listDB(String data){
 			
 			Connection conn = null;
 			conn = connDB(conn);
 			try{
-				String sql = "SELECT RNO,USERID, RNAME, RITEMS, RKIND, RRECOMMEND, RCOMMENT, RSCENE FROM RECIPE_RECIPE";
+				String sql = "SELECT RNO,USERID, RNAME, RITEMS, RKIND, RRECOMMEND, RCOMMENT, RSCENE FROM RECIPE_RECIPE WHERE RCHECK=?";
 				PreparedStatement pstmt = conn.prepareStatement(sql);
-
+				pstmt.setString(1, data);
+				
 				ResultSet rs = pstmt.executeQuery();
 				String message= "";
 				
-				while(rs.next()){
-					
+				if(rs.next()){
 					message+=rs.getInt("RNO")+"///"+ rs.getString("RSCENE")+"///"+
 							rs.getString("USERID")+"///"+rs.getString("RNAME")+"///"+
 							rs.getString("RITEMS")+"///"+rs.getString("RKIND")+"///"+
 							rs.getInt("RRECOMMEND")+"///"+rs.getInt("RCOMMENT")+"///";
-					
+					while(rs.next()){
+						
+						message+=rs.getInt("RNO")+"///"+ rs.getString("RSCENE")+"///"+
+								rs.getString("USERID")+"///"+rs.getString("RNAME")+"///"+
+								rs.getString("RITEMS")+"///"+rs.getString("RKIND")+"///"+
+								rs.getInt("RRECOMMEND")+"///"+rs.getInt("RCOMMENT")+"///";
+						
+					}
+				}else{
+					message="없음";
 				}
+				
 				
 				writeSocket(message);
 				
@@ -547,7 +557,7 @@ public class RecipeServer extends Application {
 				String datas = "";
 				
 				while(rs.next()){
-					datas+=rs.getString("UGENDER")+"///"+rs.getString("UAGE")+"///";
+					datas+=rs.getString("UAGE")+"///"+rs.getString("UGENDER")+"///";
 				}
 				
 				writeSocket(datas);
@@ -559,33 +569,50 @@ public class RecipeServer extends Application {
 			
 		}
 		
-		void preferenceDB(String data){
+		void preferenceDB(String ... datas){
 			
 			Connection conn = null;
 			conn = connDB(conn);
 			
 			try{
-				
-				String sql = "SELECT RNO, COUNT(*) AS COUNT FROM RECIPE_RECOMMEND GROUP BY RNO WHERE UGENDER = ? ORDER BY COUNT DESC";
-				PreparedStatement pstmt = conn.prepareStatement(sql);
-				pstmt.setString(1, data);
+				String sql = "SELECT A.USERID, A.RNAME, A.RITEMS, A.RKIND, A.RRECOMMEND, A.RCOMMENT FROM RECIPE_RECIPE A, (SELECT RNO, COUNT(UGENDER) AS COUNT"
+						+ " FROM (SELECT * FROM RECIPE_RECOMMEND ";
+				PreparedStatement pstmt=null;
+				if(datas[1].equals("전체 보기") && datas[2].equals("전체 보기")){
+					sql+=") GROUP BY RNO ORDER BY COUNT DESC) B WHERE A.RNO= B.RNO";
+					pstmt = conn.prepareStatement(sql);
+				}else if(datas[1].equals("전체 보기")){
+					sql+="WHERE UGENDER=?) GROUP BY RNO ORDER BY COUNT DESC) B WHERE A.RNO= B.RNO";
+					pstmt = conn.prepareStatement(sql);
+					pstmt.setString(1, datas[2]);
+				}else if(datas[2].equals("전체 보기")){
+					sql+="WHERE UAGE=?) GROUP BY RNO ORDER BY COUNT DESC) B WHERE A.RNO= B.RNO";
+					pstmt = conn.prepareStatement(sql);
+					pstmt.setString(1, datas[1]);
+				}else if(!datas[1].equals("전체 보기")&&!datas[2].equals("전체 보기")){
+					sql+="WHERE UAGE=? AND UGENDER=?) GROUP BY RNO ORDER BY COUNT DESC) B WHERE A.RNO= B.RNO";
+					pstmt = conn.prepareStatement(sql);
+					pstmt.setString(1, datas[1]);
+					pstmt.setString(2, datas[2]);
+				}
 				
 				ResultSet rs = pstmt.executeQuery();
 				
 				String message = "";
 				
 				if(rs.next()){
-					message+= rs.getString("USERID")+"///"+rs.getString("CCONTENT")+"///";
+					message+= rs.getString("USERID")+"///"+rs.getString("RNAME")+"///"+rs.getString("RITEMS")+"///"+
+				rs.getString("RKIND")+"///"+rs.getInt("RRECOMMEND")+"///"+rs.getInt("RCOMMENT")+"///";
 					while(rs.next()){
-						
-						message+= rs.getString("USERID")+"///"+rs.getString("CCONTENT")+"///";
-						
+						message+= rs.getString("USERID")+"///"+rs.getString("RNAME")+"///"+rs.getString("RITEMS")+"///"+
+					rs.getString("RKIND")+"///"+rs.getInt("RRECOMMEND")+"///"+rs.getInt("RCOMMENT")+"///";
 					}
 				}else
-					message="실패";
+					message="없음";
 					
 				writeSocket(message);
 				
+				pstmt.close();
 				closeDB(conn);
 			}catch(Exception e){
 				e.printStackTrace();

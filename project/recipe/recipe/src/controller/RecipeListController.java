@@ -1,6 +1,5 @@
 package controller;
 
-import java.awt.RenderingHints.Key;
 import java.net.URL;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -12,6 +11,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableRow;
@@ -27,6 +27,7 @@ public class RecipeListController implements Initializable {
 	@FXML TableView<Recipe> tableView;
 	@FXML private TextField search_Text;
 	@FXML private ComboBox<String> kind_ComboBox;
+	@FXML Button btn_Alter;
 	private Sessions sessions;
 	private ObservableList<Recipe> recipeList = FXCollections.observableArrayList();
 	private ObservableList<Recipe> searchList = FXCollections.observableArrayList();
@@ -56,16 +57,19 @@ public class RecipeListController implements Initializable {
 			public void changed(ObservableValue<? extends String> arg0, String oldValue, String newValue) {
 				Iterator<Recipe> iterator = recipeList.iterator();
 				searchList.clear();
-				if(newValue.equals("전부보기"))
-					setAll();
-				else{
-					while(iterator.hasNext()){
-						Recipe recipe = iterator.next();
-						if(recipe.getRKind().equals(newValue)){
-							searchList.add(recipe);
-						}
+				if(newValue!=null&&!datas[0].equals("없음")){
+					if(newValue.equals("전부보기")){
+						setAll();
 					}
-					tableView.setItems(searchList);
+					else{
+						while(iterator.hasNext()){
+							Recipe recipe = iterator.next();
+							if(recipe.getRKind().equals(newValue)){
+								searchList.add(recipe);
+							}
+						}
+						tableView.setItems(searchList);
+					}
 				}
 			}
 		});
@@ -97,17 +101,18 @@ public class RecipeListController implements Initializable {
 	
 	public void setSession(Sessions sessions){
 		this.sessions = sessions;
+
 		String data=sessions.readSocket(3000);
-		
 		datas = data.split("///");
 		setKind(datas);
-		setAll();
-		
+		kind_ComboBox.getSelectionModel().selectFirst();
+		if(!datas[0].equals("없음")){
+			setAll();
+		}		
 	}
 	
 	public void setAll(){
 		recipeList.clear();
-		
 		for(int i=0;i<datas.length;i=i+8){
 			Recipe recipe = new Recipe(datas[i+2],datas[i+3],datas[i+4],datas[i+5],datas[i+6],datas[i+7]);
 			recipe.setRNo(Integer.parseInt(datas[i]));
@@ -120,10 +125,11 @@ public class RecipeListController implements Initializable {
 	
 	public void setKind(String ... datas){
 		HashSet<String> hs = new HashSet<>();
+		
+		hs.add("전부보기");
 		for(int i=5;i<datas.length;i=i+8){
 			hs.add(datas[i]);
 		}
-		hs.add("전부보기");
 		
 		ObservableList<String> kindList = FXCollections.observableArrayList(hs);
 		
@@ -149,6 +155,26 @@ public class RecipeListController implements Initializable {
 			}
 		}
 		tableView.setItems(tempList);
+	}
+	
+	public void handle_AlterBtn(){
+		if(btn_Alter.getText().equals("도 전!   요 리")){
+			recipeList.clear();
+			tableView.setItems(recipeList);
+			kind_ComboBox.setItems(FXCollections.observableArrayList());
+			btn_Alter.setText("정식 요리");
+			sessions.writeSocket("리스트///0");
+			setSession(sessions);
+			
+		}else if(btn_Alter.getText().equals("정식 요리")){
+			recipeList.clear();
+			tableView.setItems(recipeList);
+			kind_ComboBox.setItems(FXCollections.observableArrayList());
+			btn_Alter.setText("도 전!   요 리");
+			sessions.writeSocket("리스트///1");
+			setSession(sessions);
+			
+		}
 	}
 	
 	public void handle_RegBtn(){
