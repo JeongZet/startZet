@@ -45,6 +45,7 @@ public class Sessions {
 	public AsynchronousSocketChannel getSocketChannel(){ return socketChannel;}
 	public Recipe getRecipe(){ return recipe;}
 	public User getUser(){return user;}
+	public FXMLLoader getLoader(){return loader;}
 	
 	//화면 전환 메소드
 	public void alterStage(String title){
@@ -181,6 +182,9 @@ public class Sessions {
 		case "장면등록":
 			filename="SceneRegister";
 			break;
+		case "선호도":
+			filename="Preference";
+			break;
 		}
 		
 	}
@@ -215,6 +219,10 @@ public class Sessions {
 		case "장면등록":
 			SceneRegisterController sceneReg_Con = loader.getController();
 			sceneReg_Con.setSession(Sessions.this);
+			break;
+		case "선호도":
+			PreferenceController preference_Con = loader.getController();
+			preference_Con.setSession(Sessions.this);
 			break;
 		}
 	}

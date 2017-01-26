@@ -131,6 +131,11 @@ public class RecipeListController implements Initializable {
 		
 	}
 	
+	public void handle_PreferenceBtn(){
+		sessions.alterStage("¼±È£µµ");
+		
+	}
+	
 	public void handle_SearchBtn(){
 		ObservableList<Recipe> tempList = FXCollections.observableArrayList();
 		Iterator<Recipe> iterator = searchList.iterator();

@@ -11,7 +11,7 @@ package baekjoon;
 
 import java.util.Scanner;
 
-public class baekjoon1000 {
+public class Baekjoon1000 {
 
 	public static void main(String[] args) {
 		

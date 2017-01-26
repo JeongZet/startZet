@@ -185,6 +185,14 @@ public class RecipeServer extends Application {
 							Platform.runLater(()->displayText("[장면등록]"));
 							sceneRegDB(datas);
 							break;
+						case "선호도콤보박스":
+							Platform.runLater(()->displayText("[선호도콤보박스]"));
+							preferenceComboBoxDB();
+							break;
+						case "선호도":
+							Platform.runLater(()->displayText("[선호도]"));
+							preferenceDB(datas[1]);
+							break;
 						}
 					}catch(Exception e){}
 					ByteBuffer read_Buffer = ByteBuffer.allocate(1000);
@@ -524,6 +532,64 @@ public class RecipeServer extends Application {
 			}
 				closeDB(conn);
 			
+		}
+		
+		void preferenceComboBoxDB(){
+			
+			Connection conn =null;
+			conn=connDB(conn);
+			try{
+				
+				String sql = "SELECT DISTINCT UAGE, UGENDER FROM RECIPE_RECOMMEND";
+				PreparedStatement pstmt = conn.prepareStatement(sql);
+				ResultSet rs = pstmt.executeQuery();
+				
+				String datas = "";
+				
+				while(rs.next()){
+					datas+=rs.getString("UGENDER")+"///"+rs.getString("UAGE")+"///";
+				}
+				
+				writeSocket(datas);
+				
+				pstmt.close();
+				closeDB(conn);
+				
+			}catch(Exception e){}
+			
+		}
+		
+		void preferenceDB(String data){
+			
+			Connection conn = null;
+			conn = connDB(conn);
+			
+			try{
+				
+				String sql = "SELECT RNO, COUNT(*) AS COUNT FROM RECIPE_RECOMMEND GROUP BY RNO WHERE UGENDER = ? ORDER BY COUNT DESC";
+				PreparedStatement pstmt = conn.prepareStatement(sql);
+				pstmt.setString(1, data);
+				
+				ResultSet rs = pstmt.executeQuery();
+				
+				String message = "";
+				
+				if(rs.next()){
+					message+= rs.getString("USERID")+"///"+rs.getString("CCONTENT")+"///";
+					while(rs.next()){
+						
+						message+= rs.getString("USERID")+"///"+rs.getString("CCONTENT")+"///";
+						
+					}
+				}else
+					message="실패";
+					
+				writeSocket(message);
+				
+				closeDB(conn);
+			}catch(Exception e){
+				e.printStackTrace();
+			}
 		}
 		
 		void regDB(String ... datas){

@@ -22,7 +22,7 @@
             </ComboBox>
          </graphic>
       </Label>
-      <Button layoutX="436.0" layoutY="55.0" mnemonicParsing="false" prefHeight="30.0" text="선  호  도">
+      <Button layoutX="436.0" layoutY="55.0" mnemonicParsing="false" onAction="#handle_PreferenceBtn" prefHeight="30.0" text="선  호  도">
          <font>
             <Font name="System Bold" size="20.0" />
          </font>
