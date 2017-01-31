@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.text.*?>
+<?import javafx.scene.control.*?>
+<?import java.lang.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.layout.AnchorPane?>
+
+<AnchorPane prefHeight="400.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.PreferenceController">
+   <children>
+      <Label contentDisplay="RIGHT" layoutX="43.0" layoutY="57.0" prefHeight="30.0" text="연      령     ">
+         <font>
+            <Font name="System Bold" size="20.0" />
+         </font>
+         <graphic>
+            <ComboBox fx:id="age_ComboBox" prefHeight="30.0" prefWidth="150.0">
+               <opaqueInsets>
+                  <Insets left="20.0" />
+               </opaqueInsets>
+            </ComboBox>
+         </graphic>
+      </Label>
+      <TableView fx:id="tableView" fixedCellSize="0.0" layoutX="43.0" layoutY="123.0" prefHeight="225.0" prefWidth="900.0">
+        <columns>
+          <TableColumn maxWidth="100.0" minWidth="100.0" prefWidth="100.0" style="-fx-alignment:CENTER;" text="작성자" />
+          <TableColumn maxWidth="200.0" minWidth="200.0" prefWidth="200.0" style="-fx-alignment:CENTER;" text="요리 이름" />
+            <TableColumn maxWidth="430.0" minWidth="430.0" prefWidth="430.0" style="-fx-alignment:CENTER;" text="요리 재료" />
+            <TableColumn maxWidth="70.0" minWidth="70.0" prefWidth="70.0" style="-fx-alignment:CENTER;" text="종류" />
+            <TableColumn maxWidth="50.0" minWidth="50.0" prefWidth="50.0" style="-fx-alignment:CENTER;" text="추천" />
+            <TableColumn maxWidth="50.0" minWidth="50.0" prefWidth="50.0" style="-fx-alignment:CENTER;" text="댓글" />
+        </columns>
+      </TableView>
+      <Button layoutX="824.0" layoutY="53.0" mnemonicParsing="false" onAction="#handle_PriorBtn" prefHeight="30.0" text="이        전">
+         <font>
+            <Font name="System Bold" size="20.0" />
+         </font>
+      </Button>
+      <Label contentDisplay="RIGHT" layoutX="361.0" layoutY="57.0" prefHeight="30.0" text="성      별     ">
+         <font>
+            <Font name="System Bold" size="20.0" />
+         </font>
+         <graphic>
+            <ComboBox fx:id="gender_ComboBox" prefHeight="30.0" prefWidth="150.0">
+               <opaqueInsets>
+                  <Insets left="20.0" />
+               </opaqueInsets>
+            </ComboBox>
+         </graphic>
+      </Label>
+   </children>
+</AnchorPane>
