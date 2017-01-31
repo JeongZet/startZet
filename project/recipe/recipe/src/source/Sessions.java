@@ -1,41 +1,40 @@
 package source;
 
+/*
+ * 로그인하는 유저들의 세션을 유지하기 위한 값으로
+ * 유저의 화면 구성과 소켓을 단독적으로 가지고 있는 클래스로
+ * 개별의 유저들을 관리할 수 있는 클래스이다.
+ */
+
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.nio.ByteBuffer;
-import java.nio.channels.AsynchronousChannelGroup;
-import java.nio.channels.AsynchronousSocketChannel;
-import java.nio.channels.CompletionHandler;
+import java.nio.channels.*;
 import java.nio.charset.Charset;
-import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
+import java.util.concurrent.*;
 
 import controller.*;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
+import javafx.scene.*;
 import javafx.scene.control.Label;
-import javafx.stage.Popup;
-import javafx.stage.Stage;
+import javafx.stage.*;
 
 public class Sessions {
 	
-	private Stage primaryStage;
-	private FXMLLoader loader;
-	private String filename;
-	private AsynchronousChannelGroup channelGroup;
-	private AsynchronousSocketChannel socketChannel;
-	private Charset charset = Charset.forName("UTF-8");
-	public String message;
-	private boolean connecting=false;
-	private Recipe recipe;
-	private User user;
+	private Stage primaryStage;							//AppMain에서 할당 받은 스테이지
+	private FXMLLoader loader;							//간단한 화면 구성을 위해 FXMLLoader 변수
+	private String filename;							//FXML 파일 관리를 위한 filename
+	private AsynchronousChannelGroup channelGroup;		//비동기 소켓 사용을 위한 비동기채널그룹
+	private AsynchronousSocketChannel socketChannel;	//유저들에게 하나씩 할당되는 비동기 소켓
+	private Charset charset = Charset.forName("UTF-8");	//소켓을 통해 보내지는 데이터 인코딩을 위한 문자집합(UTF-8 형식)
+	private boolean connecting=false;					//비정상 종료나 로그아웃시에 소켓이 연결 여부의 변수  
+	private Recipe recipe;								//유저가 레시피를 선택하여 뷰 화면 돌입 시 선택했던 레시피 정보
+	private User user;									//유저의 로그인 정보
 	
 	//Set 메소드
 	public void setStage(Stage primaryStage){
-		
 		this.primaryStage=primaryStage;
-		this.primaryStage.setOnCloseRequest(event->stopSession());
+		this.primaryStage.setOnCloseRequest(event->stopSession()); //스테이지를 Setting하면서 프로그램 강제종료에 대한 이벤트처리 	
 	}
 	public void setUser(User user){ this.user=user;}
 	public void setRecipe(Recipe recipe){ this.recipe =recipe;}
@@ -47,7 +46,7 @@ public class Sessions {
 	public User getUser(){return user;}
 	public FXMLLoader getLoader(){return loader;}
 	
-	//화면 전환 메소드
+	//화면 전환 메소드 
 	public void alterStage(String title){
 		
 		filename(title);
@@ -78,13 +77,12 @@ public class Sessions {
 				
 				
 				Future<Void> conn_Future = socketChannel.connect(new InetSocketAddress("localhost",5001));
-				conn_Future.get();
+				conn_Future.get();					//연결될 때까지 블로킹
 				connecting=true;
 			}
 		}catch(Exception e){
-			e.printStackTrace();
+			popup("해당 연결을 할 수 없습니다.");
 		}
-		
 	}
 
 	//비동기 소켓채널 read 메소드
@@ -94,10 +92,10 @@ public class Sessions {
 		String data = null;
 		try{
 			Future<Integer> read_Future = socketChannel.read(read_Buffer);
-			read_Future.get();
-			read_Buffer.flip();
+			read_Future.get();								//버퍼를 읽을 때까지 블로킹
+			read_Buffer.flip();								//버퍼를 읽기 위해 현재 position을 0으로 변경
 			
-			data = charset.decode(read_Buffer).toString();
+			data = charset.decode(read_Buffer).toString();	//버퍼를 디코딩하여 String으로 변환
 		}
 		catch(Exception e){
 			if(socketChannel.isOpen()) stopSession();
@@ -112,7 +110,7 @@ public class Sessions {
 		ByteBuffer write_Buffer = charset.encode(data);
 		try{
 			Future<Integer> write_Future = socketChannel.write(write_Buffer);
-			write_Future.get();
+			write_Future.get();								//버퍼가 보내질 때까지 블로킹
 		}
 		catch(Exception e){
 			if(socketChannel.isOpen()) stopSession();
@@ -121,6 +119,7 @@ public class Sessions {
 	}
 	
 	//Session 종료 및 비정상 종료 메소드
+	//비정상 종료나 강제종료, 로그아웃으로 유저의 접속종료함을 서버로 보내주는 메소드
 	public void stopSession(){
 		try{
 			if(connecting==true){

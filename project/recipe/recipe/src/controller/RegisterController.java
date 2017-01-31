@@ -88,21 +88,6 @@ public class RegisterController implements Initializable {
 			
 			sessions.writeSocket(message);
 			
-			/*
-			session.getSocketChannel().read(read_Buffer, read_Buffer, new CompletionHandler<Integer, ByteBuffer>(){
-	
-				public void completed(Integer result, ByteBuffer attachment) {
-					attachment.flip();
-					String message = Charset.forName("UTF-8").decode(attachment).toString();
-					System.out.println(message);
-					
-				}
-	
-				public void failed(Throwable exc, ByteBuffer attachment) {
-					if(session.getSocketChannel().isOpen()) session.stopSession();
-				}
-			});
-			*/
 			String data = sessions.readSocket(10);
 			
 			if(data.equals("¾øÀ½")){

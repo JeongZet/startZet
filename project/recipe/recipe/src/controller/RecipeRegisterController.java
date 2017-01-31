@@ -31,11 +31,14 @@ public class RecipeRegisterController implements Initializable {
 				!kind_Text.getText().equals("")&&
 				!scene_Text.getText().equals("")&&
 				!item_Text.getText().equals("")){
+			String mode = "0";
 			Recipe recipe= new Recipe(session.getUser().getID(), name_Text.getText(), item_Text.getText(), kind_Text.getText(), "0", "0");
 			session.setRecipe(recipe);
 			session.getRecipe().setScene(Integer.parseInt(scene_Text.getText()));
-			
-			session.writeSocket("레시피등록///"+name_Text.getText()+"///"+kind_Text.getText()+"///"+item_Text.getText()+"///"+session.getUser().getID());
+			if(session.getUser().getID().equals("root")){
+				mode = "1";
+			}
+			session.writeSocket("레시피등록///"+name_Text.getText()+"///"+kind_Text.getText()+"///"+item_Text.getText()+"///"+session.getUser().getID()+"///"+mode);
 			
 			session.getRecipe().setRNo(Integer.parseInt(session.readSocket(5)));
 			

@@ -1,17 +1,23 @@
 package source;
 
+/*
+ * SimpleStringProperty를 활용하여 레시피들의 이름, 재료, 종류 등을 갖고 있는 클래스로
+ * TableView 세팅을 위해 SimpleStringProperty 변수를 사용하였다.
+ */
+
 import javafx.beans.property.SimpleStringProperty;
 
 public class Recipe {
-	private int rNo;
-	private int scene;
-	private SimpleStringProperty userID;
-	private SimpleStringProperty rName;
-	private SimpleStringProperty rItems;
-	private SimpleStringProperty rKind;
-	private SimpleStringProperty rRecommend;
-	private SimpleStringProperty rComment;
+	private int rNo;						//레시피 번호
+	private int scene;						//레시피 총 장면수
+	private SimpleStringProperty userID;	//레시피 등록자 아이디
+	private SimpleStringProperty rName;		//레시피 이름
+	private SimpleStringProperty rItems;	//레시피 재료
+	private SimpleStringProperty rKind;		//레시피 종류
+	private SimpleStringProperty rRecommend;//레시피 추천 수
+	private SimpleStringProperty rComment;	//레시피 댓글 수
 
+	//레시피 클래스 생성자
 	public Recipe(String userID, String rName, String rItems, String rKind, String rRecommend, String rComment){
 		this.userID = new SimpleStringProperty(userID);
 		this.rName = new SimpleStringProperty(rName);
@@ -21,6 +27,7 @@ public class Recipe {
 		this.rComment = new SimpleStringProperty(rComment);
 	}
 	
+	//레시피 클래스 Setting 메소드들
 	public void setScene(int scene){this.scene=scene;}
 	public void setRNo(int rNo){ this.rNo=rNo;}
 	public void setUserID(String userID){ this.userID.set(userID);}
@@ -30,6 +37,7 @@ public class Recipe {
 	public void setRRecommend(String rRecommend){ this.rRecommend.set(rRecommend);}
 	public void setRComment(String rComment){ this.rComment.set(rComment);}
 	
+	//레시피 클래스 Getting 메소드들
 	public int getScene(){ return scene;}
 	public int getRNo(){ return rNo;}
 	public String getUserID(){ return userID.get();}

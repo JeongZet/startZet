@@ -193,6 +193,10 @@ public class RecipeServer extends Application {
 							Platform.runLater(()->displayText("[선호도]"));
 							preferenceDB(datas);
 							break;
+						case "채택":
+							Platform.runLater(()->displayText("[채택]"));
+							adoptDB(datas);
+							break;
 						}
 					}catch(Exception e){}
 					ByteBuffer read_Buffer = ByteBuffer.allocate(1000);
@@ -212,7 +216,7 @@ public class RecipeServer extends Application {
 			Connection conn = null;
 			conn = connDB(conn);
 			try{
-				String sql = "SELECT USERID, UGENDER, UAGE FROM RECIPE_USER WHERE USERID=? AND UPW=?";
+				String sql = "SELECT USERID, UNAME, UGENDER, UAGE FROM RECIPE_USER WHERE USERID=? AND UPW=?";
 				PreparedStatement pstmt = conn.prepareStatement(sql);
 				pstmt.setString(1, datas[1]);
 				pstmt.setString(2, datas[2]);
@@ -220,7 +224,10 @@ public class RecipeServer extends Application {
 				ResultSet rs = pstmt.executeQuery();
 				
 				if(rs.next()){
-					writeSocket("성공///"+rs.getString("USERID")+"///"+rs.getString("UGENDER")+"///"+rs.getString("UAGE"));
+					if(rs.getString("UNAME").equals("관리자")) 
+						writeSocket("성공///관리자");
+					else
+						writeSocket("성공///"+rs.getString("USERID")+"///"+rs.getString("UGENDER")+"///"+rs.getString("UAGE")+"///");
 				}else{
 					writeSocket("실패");
 				}
@@ -279,7 +286,6 @@ public class RecipeServer extends Application {
 				pstmt.setInt(2, Integer.parseInt(datas[2]));
 				
 				ResultSet rs = pstmt.executeQuery();
-				String message= "";
 				
 				if(rs.next()){
 					
@@ -447,12 +453,13 @@ public class RecipeServer extends Application {
 			conn = connDB(conn);
 			
 			try{
-				String sql = "INSERT INTO RECIPE_RECIPE(RNAME, RKIND, RITEMS, USERID) VALUES(?, ?, ?, ?)";
+				String sql = "INSERT INTO RECIPE_RECIPE(RNAME, RKIND, RITEMS, USERID, RCHECK) VALUES(?, ?, ?, ?, ?)";
 				PreparedStatement pstmt = conn.prepareStatement(sql, new String[]{"RNO"});
 				pstmt.setString(1, datas[1]);
 				pstmt.setString(2, datas[2]);
 				pstmt.setString(3, datas[3]);
 				pstmt.setString(4, datas[4]);
+				pstmt.setString(5, datas[5]);
 				
 				int upd = pstmt.executeUpdate();
 				
@@ -617,6 +624,39 @@ public class RecipeServer extends Application {
 			}catch(Exception e){
 				e.printStackTrace();
 			}
+		}
+		
+		void adoptDB(String... datas){
+			Connection conn =null;
+			conn = connDB(conn);
+			try{
+				String sql = "SELECT RCHECK FROM RECIPE_RECIPE WHERE RNO=?";
+				PreparedStatement pstmt = conn.prepareStatement(sql);
+				pstmt.setString(1, datas[1]);
+				
+				ResultSet rs = pstmt.executeQuery();
+				
+				if(rs.next()){
+					if(rs.getString("RCHECK").equals("1")){
+						writeSocket("실패");
+					}else{
+						sql = "UPDATE RECIPE_RECIPE SET RCHECK='1' WHERE RNO=?";
+						pstmt = conn.prepareStatement(sql);
+						pstmt.setString(1, datas[1]);
+						
+						int upd = pstmt.executeUpdate();
+						
+						writeSocket("성공");
+					}
+						
+				}
+				
+				
+				
+			}catch(Exception e){
+				e.printStackTrace();
+			}
+			
 		}
 		
 		void regDB(String ... datas){
