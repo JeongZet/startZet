@@ -1,44 +1,22 @@
 package recipeServer;
 
-import java.io.ByteArrayInputStream;
-import java.io.InputStream;
+import java.io.*;
 import java.net.InetSocketAddress;
 import java.nio.ByteBuffer;
-import java.nio.channels.AsynchronousChannelGroup;
-import java.nio.channels.AsynchronousServerSocketChannel;
-import java.nio.channels.AsynchronousSocketChannel;
-import java.nio.channels.CompletionHandler;
+import java.nio.channels.*;
 import java.nio.charset.Charset;
-import java.sql.Blob;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.util.List;
-import java.util.Properties;
-import java.util.Vector;
-import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
+import java.sql.*;
+import java.util.*;
+import java.util.concurrent.*;
 
-import javax.activation.CommandMap;
-import javax.activation.MailcapCommandMap;
-import javax.mail.Authenticator;
-import javax.mail.Message;
-import javax.mail.Multipart;
-import javax.mail.PasswordAuthentication;
-import javax.mail.Session;
-import javax.mail.Transport;
-import javax.mail.internet.InternetAddress;
-import javax.mail.internet.MimeBodyPart;
-import javax.mail.internet.MimeMessage;
-import javax.mail.internet.MimeMultipart;
+import javax.activation.*;
+import javax.mail.*;
+import javax.mail.internet.*;
 
-import javafx.application.Application;
-import javafx.application.Platform;
+import javafx.application.*;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.TextArea;
+import javafx.scene.control.*;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 import oracle.jdbc.internal.OracleResultSet;
@@ -123,79 +101,79 @@ public class RecipeServer extends Application {
 						Charset charset = Charset.forName("UTF-8");
 						String data = charset.decode(attachment).toString();
 						String[] datas = data.split("///");
-
+						String message = " - ["+socketChannel.getRemoteAddress()+" : "+Thread.currentThread().getName()+"]" ;
 						switch(datas[0]){
 						case "로그인":
-							Platform.runLater(()->displayText("[로그인]"));
+							Platform.runLater(()->displayText("[로그인]"+message));
 							loginDB(datas);
 							break;
+						case "중복확인":
+							Platform.runLater(()->displayText("[중복확인]"+message));
+							checkDB(datas[1]);
+							break;
 						case "회원가입":
-							Platform.runLater(()->displayText("[회원가입]"));
+							Platform.runLater(()->displayText("[회원가입]"+message));
 							regDB(datas);
 							break;
 						case "아이디찾기":
-							Platform.runLater(()->displayText("[아이디찾기]"));
+							Platform.runLater(()->displayText("[아이디찾기]"+message));
 							searchDB(datas);
 							break;
 						case "비밀번호찾기":
-							Platform.runLater(()->displayText("[비밀번호찾기]"));
+							Platform.runLater(()->displayText("[비밀번호찾기]"+message));
 							searchDB(datas);
 							break;
-						case "중복확인":
-							Platform.runLater(()->displayText("[중복확인]"));
-							checkDB(datas[1]);
-							break;
-						case "연결종료":
-							Platform.runLater(()->displayText("[연결종료]"));
-							fail();
-							break;
 						case "리스트":
-							Platform.runLater(()->displayText("[리스트]"));
+							Platform.runLater(()->displayText("[리스트]"+message));
 							listDB(datas[1]);
 							break;
 						case "뷰":
-							Platform.runLater(()->displayText("[뷰]"));
+							Platform.runLater(()->displayText("[뷰]"+message));
 							viewDB(datas);
 							break;
 						case "이미지":
-							Platform.runLater(()->displayText("[이미지 전송]"));
+							Platform.runLater(()->displayText("[이미지 전송]"+message));
 							imageDB(datas);
 							break;
 						case "전체보기":
-							Platform.runLater(()->displayText("[이미지 전송]"));
+							Platform.runLater(()->displayText("[이미지 전송]"+message));
 							allViewDB(datas[1]);
 							break;
 						case "추천":
-							Platform.runLater(()->displayText("[추천]"));
+							Platform.runLater(()->displayText("[추천]"+message));
 							recommendDB(datas);
 							break;
 						case "댓글등록":
-							Platform.runLater(()->displayText("[댓글등록]"));
+							Platform.runLater(()->displayText("[댓글등록]"+message));
 							commentDB(datas);
 							break;
 						case "댓글보기":
-							Platform.runLater(()->displayText("[댓글보기]"));
+							Platform.runLater(()->displayText("[댓글보기]"+message));
 							commentViewDB(datas[1]);
 							break;
 						case "레시피등록":
-							Platform.runLater(()->displayText("[레시피등록]"));
+							Platform.runLater(()->displayText("[레시피등록]"+message));
 							recipeRegDB(datas);
 							break;
 						case "장면등록":
-							Platform.runLater(()->displayText("[장면등록]"));
+							Platform.runLater(()->displayText("[장면등록]"+message));
 							sceneRegDB(datas);
 							break;
 						case "선호도콤보박스":
-							Platform.runLater(()->displayText("[선호도콤보박스]"));
+							Platform.runLater(()->displayText("[선호도콤보박스]"+message));
 							preferenceComboBoxDB();
 							break;
 						case "선호도":
-							Platform.runLater(()->displayText("[선호도]"));
+							Platform.runLater(()->displayText("[선호도]"+message));
 							preferenceDB(datas);
 							break;
 						case "채택":
-							Platform.runLater(()->displayText("[채택]"));
+							Platform.runLater(()->displayText("[채택]"+message));
 							adoptDB(datas);
+							break;
+						case "연결종료":
+							Platform.runLater(()->displayText("[연결종료]"+message));
+							fail();
 							break;
 						}
 					}catch(Exception e){}
@@ -212,7 +190,7 @@ public class RecipeServer extends Application {
 				
 		}
 		
-		void loginDB(String ... datas){
+		void loginDB(String[] datas){
 			Connection conn = null;
 			conn = connDB(conn);
 			try{
@@ -238,6 +216,130 @@ public class RecipeServer extends Application {
 			}
 		}
 
+		void checkDB(String data){
+			Connection conn = null;
+			conn = connDB(conn);
+			try{
+				String sql = "SELECT USERID FROM RECIPE_USER WHERE USERID=?";
+				PreparedStatement pstmt = conn.prepareStatement(sql);
+				
+				pstmt.setString(1, data);
+				
+				ResultSet rs = pstmt.executeQuery();
+				
+				if(rs.next()){
+					writeSocket("있음");
+				}else
+					writeSocket("없음");
+				
+				closeDB(conn);
+			}catch(Exception e){
+				e.printStackTrace();
+			}
+		}
+
+		void regDB(String[] datas){
+			Connection conn = null;
+			conn = connDB(conn);
+			try{
+				String sql = "INSERT INTO RECIPE_USER(USERID,UPW,UNAME,UTEL,UMAIL,UGENDER,UAGE) VALUES(?, ?, ?, ?, ?, ?, ?)";
+				PreparedStatement pstmt = conn.prepareStatement(sql);
+				
+				for(int i=1;i<8;i++){
+					pstmt.setString(i, datas[i]);
+				}
+				
+				int row = pstmt.executeUpdate();
+				
+				if(row==1){
+					writeSocket("성공");
+				}else
+					writeSocket("실패");
+				
+				closeDB(conn);
+			}catch(Exception e){
+				e.printStackTrace();
+			}
+		}
+	
+		void searchDB(String[] datas){
+			Connection conn = null;
+			conn = connDB(conn);
+			try{
+				String sql=null;
+				if(datas[0].equals("아이디찾기")){
+					sql = "SELECT USERID FROM RECIPE_USER WHERE UMAIL=?";;
+				}else if(datas[0].equals("비밀번호찾기")){
+					sql = "SELECT UPW FROM RECIPE_USER WHERE UMAIL = ? AND USERID=? ";
+				}
+				PreparedStatement pstmt = conn.prepareStatement(sql);
+				
+				for(int i=1;i<datas.length;i++){
+					pstmt.setString(i, datas[i]);
+				}
+				
+				ResultSet rs = pstmt.executeQuery();
+				
+				if(rs.next()){
+					mailSend("레시피 프로그램 찾기",rs.getString(1)+" 입니다.",datas[1]);
+					writeSocket("성공");
+				}else
+					writeSocket("실패");
+				
+				closeDB(conn);
+			}catch(Exception e){
+				e.printStackTrace();
+			}
+		}
+	
+		void mailSend(String title, String content,String receiver){
+			Properties props = new Properties();
+	        props.setProperty("mail.transport.protocol", "smtp");
+	        props.setProperty("mail.host", "smtp.gmail.com");
+	        props.put("mail.smtp.auth", "true");
+	        props.put("mail.smtp.port", "465");
+	        props.put("mail.smtp.socketFactory.port", "465");
+	        props.put("mail.smtp.socketFactory.class", "javax.net.ssl.SSLSocketFactory");
+	        props.put("mail.smtp.socketFactory.fallback", "false");
+	        props.setProperty("mail.smtp.quitwait", "false");
+	         
+	        Authenticator auth = new Authenticator(){
+	            protected PasswordAuthentication getPasswordAuthentication() {
+	                return new PasswordAuthentication(identification.getmailId() , identification.getmailPW());
+	            }
+	        };
+	    
+	        Session session = Session.getDefaultInstance(props,auth);
+	        
+	        try{
+		        MimeMessage message = new MimeMessage(session);
+		        message.setSender(new InternetAddress(identification.getmailId()));
+		        message.setSubject(title);
+		 
+		        message.setRecipient(Message.RecipientType.TO, new InternetAddress(receiver));
+		         
+		        Multipart mp = new MimeMultipart();
+		        MimeBodyPart mbp1 = new MimeBodyPart();
+		        mbp1.setText(content);
+		        mp.addBodyPart(mbp1);
+		        
+		        MailcapCommandMap mc = (MailcapCommandMap) CommandMap.getDefaultCommandMap();
+		        mc.addMailcap("text/html;; x-java-content-handler=com.sun.mail.handlers.text_html");
+		        mc.addMailcap("text/xml;; x-java-content-handler=com.sun.mail.handlers.text_xml");
+		        mc.addMailcap("text/plain;; x-java-content-handler=com.sun.mail.handlers.text_plain");
+		        mc.addMailcap("multipart/*;; x-java-content-handler=com.sun.mail.handlers.multipart_mixed");
+		        mc.addMailcap("message/rfc822;; x-java-content-handler=com.sun.mail.handlers.message_rfc822");
+		        CommandMap.setDefaultCommandMap(mc);
+
+		        message.setContent(mp);
+		         
+		        Transport.send(message);
+		        
+	        }catch(Exception e){
+	        	e.printStackTrace();
+	        }
+		}
+		
 		void listDB(String data){
 			
 			Connection conn = null;
@@ -276,7 +378,7 @@ public class RecipeServer extends Application {
 			
 		}
 		
-		void viewDB(String ... datas){
+		void viewDB(String[] datas){
 			Connection conn = null;
 			conn = connDB(conn);
 			try{
@@ -302,7 +404,7 @@ public class RecipeServer extends Application {
 			}catch(Exception e){e.printStackTrace();}
 		}
 		
-		void imageDB(String ... datas){
+		void imageDB(String[] datas){
 			
 			Connection conn = null;
 			conn = connDB(conn);
@@ -351,7 +453,7 @@ public class RecipeServer extends Application {
 			
 		}
 		
-		void recommendDB(String ... datas){
+		void recommendDB(String[] datas){
 			
 			Connection conn = null;
 			conn = connDB(conn);
@@ -387,7 +489,7 @@ public class RecipeServer extends Application {
 			
 		}
 		
-		void commentDB(String ...datas ){
+		void commentDB(String[] datas){
 			Connection conn = null;
 			conn = connDB(conn);
 			
@@ -576,7 +678,7 @@ public class RecipeServer extends Application {
 			
 		}
 		
-		void preferenceDB(String ... datas){
+		void preferenceDB(String[] datas){
 			
 			Connection conn = null;
 			conn = connDB(conn);
@@ -626,7 +728,7 @@ public class RecipeServer extends Application {
 			}
 		}
 		
-		void adoptDB(String... datas){
+		void adoptDB(String[] datas){
 			Connection conn =null;
 			conn = connDB(conn);
 			try{
@@ -659,128 +761,16 @@ public class RecipeServer extends Application {
 			
 		}
 		
-		void regDB(String ... datas){
-			Connection conn = null;
-			conn = connDB(conn);
+		void fail(){
 			try{
-				String sql = "INSERT INTO RECIPE_USER(USERID,UPW,UNAME,UTEL,UMAIL,UGENDER,UAGE) VALUES(?, ?, ?, ?, ?, ?, ?)";
-				PreparedStatement pstmt = conn.prepareStatement(sql);
+				String message = "[클라이언트 통신 안됨 : "+socketChannel.getRemoteAddress() + " : "+ Thread.currentThread().getName() + "]";
+				Platform.runLater(()->{
+					displayText(message);
+				});
+				connections.remove(Client.this);
+				socketChannel.close();
 				
-				for(int i=1;i<8;i++){
-					pstmt.setString(i, datas[i]);
-				}
-				
-				int row = pstmt.executeUpdate();
-				
-				if(row==1){
-					writeSocket("성공");
-				}else
-					writeSocket("실패");
-				
-				closeDB(conn);
-			}catch(Exception e){
-				e.printStackTrace();
-			}
-		}
-		
-		void checkDB(String data){
-			Connection conn = null;
-			conn = connDB(conn);
-			try{
-				String sql = "SELECT USERID FROM RECIPE_USER WHERE USERID=?";
-				PreparedStatement pstmt = conn.prepareStatement(sql);
-				
-				pstmt.setString(1, data);
-				
-				ResultSet rs = pstmt.executeQuery();
-				
-				if(rs.next()){
-					writeSocket("있음");
-				}else
-					writeSocket("없음");
-				
-				closeDB(conn);
-			}catch(Exception e){
-				e.printStackTrace();
-			}
-		}
-
-		void searchDB(String ... datas){
-			Connection conn = null;
-			conn = connDB(conn);
-			try{
-				String sql=null;
-				if(datas[0].equals("아이디찾기")){
-					sql = "SELECT USERID FROM RECIPE_USER WHERE UMAIL=?";;
-				}else if(datas[0].equals("비밀번호찾기")){
-					sql = "SELECT UPW FROM RECIPE_USER WHERE UMAIL = ? AND USERID=? ";
-				}
-				PreparedStatement pstmt = conn.prepareStatement(sql);
-				
-				for(int i=1;i<datas.length;i++){
-					pstmt.setString(i, datas[i]);
-				}
-				
-				ResultSet rs = pstmt.executeQuery();
-				
-				if(rs.next()){
-					mailSend("레시피 프로그램 찾기",rs.getString(1)+" 입니다.",datas[1]);
-					writeSocket("성공");
-				}else
-					writeSocket("실패");
-				
-				closeDB(conn);
-			}catch(Exception e){
-				e.printStackTrace();
-			}
-		}
-		
-		void mailSend(String title, String content,String receiver){
-			Properties props = new Properties();
-	        props.setProperty("mail.transport.protocol", "smtp");
-	        props.setProperty("mail.host", "smtp.gmail.com");
-	        props.put("mail.smtp.auth", "true");
-	        props.put("mail.smtp.port", "465");
-	        props.put("mail.smtp.socketFactory.port", "465");
-	        props.put("mail.smtp.socketFactory.class", "javax.net.ssl.SSLSocketFactory");
-	        props.put("mail.smtp.socketFactory.fallback", "false");
-	        props.setProperty("mail.smtp.quitwait", "false");
-	         
-	        Authenticator auth = new Authenticator(){
-	            protected PasswordAuthentication getPasswordAuthentication() {
-	                return new PasswordAuthentication(identification.getmailId() , identification.getmailPW());
-	            }
-	        };
-	    
-	        Session session = Session.getDefaultInstance(props,auth);
-	        
-	        try{
-		        MimeMessage message = new MimeMessage(session);
-		        message.setSender(new InternetAddress(identification.getmailId()));
-		        message.setSubject(title);
-		 
-		        message.setRecipient(Message.RecipientType.TO, new InternetAddress(receiver));
-		         
-		        Multipart mp = new MimeMultipart();
-		        MimeBodyPart mbp1 = new MimeBodyPart();
-		        mbp1.setText(content);
-		        mp.addBodyPart(mbp1);
-		        
-		        MailcapCommandMap mc = (MailcapCommandMap) CommandMap.getDefaultCommandMap();
-		        mc.addMailcap("text/html;; x-java-content-handler=com.sun.mail.handlers.text_html");
-		        mc.addMailcap("text/xml;; x-java-content-handler=com.sun.mail.handlers.text_xml");
-		        mc.addMailcap("text/plain;; x-java-content-handler=com.sun.mail.handlers.text_plain");
-		        mc.addMailcap("multipart/*;; x-java-content-handler=com.sun.mail.handlers.multipart_mixed");
-		        mc.addMailcap("message/rfc822;; x-java-content-handler=com.sun.mail.handlers.message_rfc822");
-		        CommandMap.setDefaultCommandMap(mc);
-
-		        message.setContent(mp);
-		         
-		        Transport.send(message);
-		        
-	        }catch(Exception e){
-	        	e.printStackTrace();
-	        }
+			}catch(Exception e){}
 		}
 		
 		Connection connDB(Connection conn){
@@ -834,18 +824,6 @@ public class RecipeServer extends Application {
 				}
 				
 			});
-		}
-		
-		void fail(){
-			try{
-				String message = "[클라이언트 통신 안됨 : "+socketChannel.getRemoteAddress() + " : "+ Thread.currentThread().getName() + "]";
-				Platform.runLater(()->{
-					displayText(message);
-				});
-				connections.remove(Client.this);
-				socketChannel.close();
-				
-			}catch(Exception e){}
 		}
 		
 	}
