@@ -96,6 +96,7 @@ public class RegisterController implements Initializable {
 			if(data.equals("없음")){
 				checking=true;
 				Platform.runLater(()->sessions.popup("사용할 수 있는 아이디입니다."));
+				id_Text.setEditable(false);
 			}else if(data.equals("있음")){
 				checking=false;
 				Platform.runLater(()->sessions.popup("존재하는 아이디입니다."));
