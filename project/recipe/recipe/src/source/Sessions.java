@@ -26,7 +26,7 @@ public class Sessions {
 	private String filename;							//FXML 파일 관리를 위한 filename
 	private AsynchronousChannelGroup channelGroup;		//비동기 소켓 사용을 위한 비동기채널그룹
 	private AsynchronousSocketChannel socketChannel;	//유저들에게 하나씩 할당되는 비동기 소켓
-	private Charset charset = Charset.forName("UTF-8");	//소켓을 통해 보내지는 데이터 인코딩을 위한 문자집합(UTF-8 형식)
+	private Charset charset = Charset.forName("UTF-8");	//소켓을 통해 보내지는 데이터 디코딩.인코딩을 위한 문자집합(UTF-8 형식)
 	private boolean connecting=false;					//비정상 종료나 로그아웃시에 소켓이 연결 여부의 변수  
 	private Recipe recipe;								//유저가 레시피를 선택하여 뷰 화면 돌입 시 선택했던 레시피 정보
 	private User user;									//유저의 로그인 정보
