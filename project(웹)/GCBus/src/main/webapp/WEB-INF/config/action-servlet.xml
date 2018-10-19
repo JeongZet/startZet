@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns:context="http://www.springframework.org/schema/context"
+    xmlns:p="http://www.springframework.org/schema/p"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns="http://www.springframework.org/schema/beans"
+    xmlns:mvc="http://www.springframework.org/schema/mvc"
+    xmlns:aop="http://www.springframework.org/schema/aop"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+       http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.0.xsd
+       http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc.xsd
+       http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd">
+
+    <context:component-scan base-package="com.gebalstory.gcbus" use-default-filters="false" >
+    	<context:include-filter type="annotation" expression="org.springframework.stereotype.Controller"/>
+    </context:component-scan>
+      
+    <mvc:annotation-driven>
+	    <mvc:argument-resolvers>
+	        <bean class="com.gebalstory.gcbus.common.resolver.CustomMapArgumentResolver" />
+	    </mvc:argument-resolvers>
+	</mvc:annotation-driven> 
+     
+    <aop:aspectj-autoproxy/>
+    <bean id="loggerAspect" class="com.gebalstory.gcbus.common.logger.LoggerAspect"/>
+          
+    <mvc:interceptors>
+        <mvc:interceptor>
+            <mvc:mapping path="/**"/>
+            <bean id="loggerInterceptor" class="com.gebalstory.gcbus.common.logger.LoggerInterceptor"></bean>
+        </mvc:interceptor>
+        
+        <mvc:interceptor>
+        	<mvc:mapping path="/reg/**"/>
+        	<bean id="adminInterceptor" class="com.gebalstory.gcbus.common.interceptor.AdminInterceptor" ></bean>
+        </mvc:interceptor>
+    </mvc:interceptors>
+      
+    <bean class="org.springframework.web.servlet.view.BeanNameViewResolver" p:order="0" />
+	<bean class="org.springframework.web.servlet.view.json.MappingJacksonJsonView" id="jsonView">
+  		<property name="contentType" value="application/json; charset=UTF-8" />
+	</bean>
+	
+    <bean
+        class="org.springframework.web.servlet.view.UrlBasedViewResolver" p:order="1"
+        p:viewClass="org.springframework.web.servlet.view.JstlView"
+        p:prefix="/WEB-INF/jsp/" p:suffix=".jsp">
+    </bean>
+    
+</beans>

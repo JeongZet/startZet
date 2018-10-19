@@ -1,0 +1,66 @@
+@CHARSET "UTF-8";
+
+.gnb{text-align:center;position:fixed; display:block; left: 0px; top: 0px; bottom:0px;  background-color:#2a2d30; width: 80px;}
+.gnb_menu{margin: 5px 0px 5px 0px;}
+.gnb a{width:60px;height:80px;font-size: 13px;text-decoration: none;color: gray;}
+.gnb_icon{width:60px;padding: 5px 5px 0px 5px;}
+.gnb .selected{background-color: #e8eced;margin: 10px 0px 0px 10px;}
+.mapBox{width:100%; height: 100%;}
+.mapBox_info{width:60%; height: 100%;float: left; overflow: hidden; display: block;}
+.leftBox{position:fixed; display:block; left:80px; width:226px; background-color: #e8eced;}
+.btn {border-radius: 3px; width: 190px; padding: 1px; cursor: pointer; color: #fff !important; display: inline-block; background-color: #6b9ab8; text-align: center; margin: 10px 0px 10px 0px; text-decoration: blink;}
+.routeBtn{display: inline;margin: 10px;}
+.result{background: white;margin: 5px;border: 1px solid gray;display: inline-block;text-align: center;padding: 10px 0px 10px 0px;height: 20px;width: 208px;text-decoration: blink;}
+.sc_node_result{width: 208px; font-size: 14px;}
+.sc_real_route_result {text-align:left; width: 188px;font-size:14px;line-height:3px;}
+.sc_route_result {text-align:center; width: 188px;font-size:14px;}
+.sc_route_result p {text-align:right;}
+.margin10{margin:10px;}
+.margin0{margin:0px;}
+.routeTable{width:600px; border-collapse: collapse; margin: 10px;}
+.routeTable th, td{border: 1px solid black; padding: 10px;}
+.routeTable th{width:80px; background-color:#808080; color: #e8eced;}
+.routeTable .vehicletime{width:100px; }
+.routeTable .nodename{width:220px; }
+.direction_li{height:100px; width:120px; position: relative; top: 0; left: 0; text-align: center;cursor: pointer;}
+.li_right{float:left;}
+.li_left{float:right}
+.topline_span{position:absolute; left:0; height:5px; background-color: gray; width: 100%;}
+.rightline_span{position:absolute; left:115px; height:100%; background-color: gray; width: 5px;}
+.leftline_span{position:absolute; left:0; right:115px; height:100%; background-color: gray; width: 5px;}
+.direction_img{margin-top: 0px; margin-left: 0px;margin-right: 0px;position: absolute;top: -13;left: 44px;}
+.direction_nodename{position:absolute;left: 10px;right: 10px;top: 20px; width:100px; }
+.markerSelected{background-color:#FF0000;}
+.routeSpan{font-size: 11px;}
+.none{display: none;}
+.customOverlay{border: 1px black solid; background-color: white; z-index: 2;}
+.boardBox{width:1000px;left: 80px;position: relative;}
+.board_list{width:100%; border-collapse: collapse; border:1px soild black;}
+.board_list th{padding:1px 1px 10px 1px;}
+.board_list td{padding:5px;}
+.board_list .date{font-size: 12px;}
+.board_list .tag{font-size: 13px;}
+.board_list .title{font-size: 17px;font-weight: 300;}
+.board_list .creator{font-style: oblique;font-size:13px;}
+.center{text-align: center;}
+.boardBtn{text-decoration: none;border: 1px solid black;background-color: gray;color: white;padding:2px 5px 2px 5px;}
+.titleClick{text-decoration: none; color: inherit;}
+.board_view{width:100%; border-collapse: collapse;}
+.board_view th,td{padding:5px;}
+.board_view th{border: 1px solid black;background-color:#808080; color: #e8eced;}
+.board_view td input{height: 25px;width:100%;}
+.board_view td select{height: 25px;}
+.inline{display:inline;}
+.invisible{display: none;}
+
+#routeBox{top:130px;}
+#searchMenu{top:0px; height:98px;}
+#searchBox{text-align: center; padding:3px 0px 0px 0px;}
+#resultBox{top:100px; bottom:0px;}
+#bodyBox{position:fixed; left:300px; top:0px; bottom:0px; right:0px; padding:10px;}
+#bodyBox hr{margin:20px 20px 20px 20px; width:90%;}
+#bodyBox p{font-size: 25px; margin:5px 0px 1px 10px;}
+#infoBox{overflow-y:auto; float: right;width: 40%;height: 100%;}
+#routePath{margin: 30px 10px 10px 10px; list-style: none; width:600px; height:100%;}
+
+ul, li{padding:0px;margin:0px;}

@@ -1,0 +1,37 @@
+<%@ page pageEncoding="utf-8"%>
+<div id="gnb" class="gnb">
+	<ul>
+		<li class="gnb_menu" id="node_find">
+			<a class="" href="<c:url value='/'/>">
+				<img src="./image/node_icon.png" alt="" class="gnb_icon"  >
+				정류소 찾기
+			</a>
+		</li>
+		<li class="gnb_menu" id="route_info">
+			<a class="" href="<c:url value='/routeInfoPage.do'/>">
+				<img src="./image/bus_icon.png" alt="" class="gnb_icon"  >
+				버스 노선
+			</a>
+		</li>
+		<!-- <li class="gnb_menu" id="path_find" >
+			<a class="">
+				<img src="./image/find_icon.png" alt="" class="gnb_icon"  >
+				길찾기<br>(미구현)
+			</a>
+		</li> -->
+		<li class="gnb_menu" id="board">
+			<a class="" href="<c:url value='/openBoardList.do'/>">
+				<img src="./image/board_icon.png" alt="" class="gnb_icon"  >
+				게시판
+			</a>
+		</li>
+	</ul>
+</div>
+
+<script type="text/javascript">
+	$(document).ready(function(){
+		$(".gnb_menu").on("click",function(e){
+			$(".gnb_menu").removeClass("selected");
+		})
+	})
+</script>

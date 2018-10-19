@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="common" >
+
+	<insert id="insertNodeSetting" parameterType="HashMap">
+		<![CDATA[
+			INSERT INTO NODE_ROUTE(
+				NODEID,
+				NODENAME,
+				ROUTEID,
+				ROUTENO
+			)
+			 VALUES(
+				#{NODEID},
+				#{NODENAME},
+				#{ROUTEID},
+				#{ROUTENO}
+			)
+		]]>
+	</insert>
+
+	<insert id="insertRouteOrderSetting" parameterType="HashMap">
+		<![CDATA[
+			INSERT INTO ROUTE_ORDER(
+				ROUTEID,
+				NODEORD,
+				NODENAME,
+				NODEID
+			)
+			 VALUES(
+				#{ROUTEID},
+				#{NODEORD},
+				#{NODENAME},
+				#{NODEID}
+			)
+		]]>
+	</insert>
+
+	<insert id="insertRouteInfoSetting" parameterType="HashMap">
+		<![CDATA[
+			INSERT INTO ROUTE_INFO(
+				ROUTEID,
+				ROUTENO,
+				STARTNODENM,
+				ENDNODENM,
+				STARTVEHICLETIME,
+				ENDVEHICLETIME
+			)
+			 VALUES(
+				#{ROUTEID},
+				#{ROUTENO},
+				#{STARTNODENM},
+				#{ENDNODENM},
+				#{STARTVEHICLETIME},
+				#{ENDVEHICLETIME}
+			)
+		]]>
+	</insert>
+
+	<insert id="insertNodeInfoSetting" parameterType="HashMap">
+		<![CDATA[
+			INSERT INTO NODE_INFO(
+				NODEID,
+				NODENO,
+				NODENM,
+				GPSLATI,
+				GPSLONG
+			)
+			 VALUES(
+				#{NODEID},
+				#{NODENO},
+				#{NODENAME},
+				#{LAT},
+				#{LNG}
+			)
+		]]>
+	</insert>
+	
+	<select id="selectFileInfo" parameterType="hashmap" resultType="hashmap">
+	
+		<![CDATA[
+			SELECT
+				ORIGINAL_FILE_NAME,
+				STORED_FILE_NAME
+			FROM
+				GC_BOARD_FILE
+			WHERE
+				BOARD_IDX=#{BOARD_IDX} AND
+				DEL_GB='N'
+		]]>
+	</select>
+
+</mapper>

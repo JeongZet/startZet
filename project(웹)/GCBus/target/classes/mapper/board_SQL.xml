@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="board">
+	<select id="selectBoardList" parameterType="hashMap" resultType="hashMap" >
+		<![CDATA[
+			SELECT 
+				BOARD_IDX,
+				TAG,
+				TITLE,
+				HIT_CNT,
+				CREA_DTM,
+				CREA_ID
+			FROM
+				GC_BOARD
+			WHERE
+				DEL_GB='N'
+		]]>
+	</select>
+	
+	<insert id="insertBoardInfo" parameterType="hashMap" useGeneratedKeys="true" keyProperty="BOARD_IDX">
+		<![CDATA[
+			INSERT INTO
+				GC_BOARD(
+					TAG,
+					TITLE,
+					CONTENTS,
+					CREA_ID,
+					HIT_CNT,
+					PASSWORD
+				)VALUES(
+					#{TAG},
+					#{TITLE},
+					#{CONTENTS},
+					#{CREATOR},
+					0,
+					#{PASSWORD}
+				)
+		]]>
+	</insert>
+	
+	<select id="selectBoardInfo" parameterType="hashMap" resultType="hashMap">
+		<![CDATA[
+			SELECT
+				BOARD_IDX,
+				HIT_CNT,
+				TAG,
+				CREA_ID,
+				CREA_DTM,
+				UPDA_DTM,
+				TITLE,
+				CONTENTS,
+				PASSWORD
+			FROM
+				GC_BOARD
+			WHERE
+				BOARD_IDX=#{BOARD_IDX}
+		]]>		
+	</select>
+	<update id="updateHitCnt" parameterType="hashMap">
+		<![CDATA[
+			UPDATE
+				GC_BOARD
+			SET
+				HIT_CNT=HIT_CNT+1
+			WHERE
+				BOARD_IDX=#{BOARD_IDX}
+		]]>
+	</update>
+	
+	<update id="updateBoard" parameterType="hashmap">
+		<![CDATA[
+			UPDATE
+				GC_BOARD
+			SET
+				TITLE=#{TITLE},
+				CONTENTS=#{CONTENTS}
+			WHERE
+				BOARD_IDX=#{BOARD_IDX}
+		]]>
+	</update>
+	
+	<update id="deleteBoard" parameterType="hashmap">
+		<![CDATA[
+			UPDATE
+				GC_BOARD
+			SET
+				DEL_GB='Y'
+			WHERE
+				BOARD_IDX=#{BOARD_IDX}				
+		]]>
+	</update>
+	
+	<insert id="insertFileInfo" parameterType="hashmap">
+		<![CDATA[
+			INSERT INTO
+				GC_BOARD_FILE(
+					BOARD_IDX,
+					ORIGINAL_FILE_NAME,
+					STORED_FILE_NAME,
+					FILE_SIZE,
+					CREA_ID
+				)VALUES(
+					#{BOARD_IDX},
+					#{ORIGINAL_FILE_NAME},
+					#{STORED_FILE_NAME},
+					#{FILE_SIZE},
+					#{CREA_ID}
+				)
+		]]>
+	</insert>
+	
+	<select id="selectFileInfo" parameterType="hashmap" resultType="hashmap">
+		<![CDATA[
+			SELECT
+				FILE_IDX,
+				ORIGINAL_FILE_NAME,
+				STORED_FILE_NAME,
+				FILE_SIZE
+			FROM
+				GC_BOARD_FILE
+			WHERE
+				BOARD_IDX=#{BOARD_IDX} AND
+				DEL_GB='N'
+		]]>	
+	</select>
+	
+	<update id="deleteFileInfo" parameterType="hashmap">
+		<![CDATA[
+			UPDATE 
+				GC_BOARD_FILE
+			SET
+				DEL_GB='Y'
+			WHERE
+				BOARD_IDX=#{BOARD_IDX}
+			
+		]]>
+	</update>
+	
+	<update id="recoveryFileInfo" parameterType="hashmap">
+		<![CDATA[
+			UPDATE
+				GC_BOARD_FILE
+			SET
+				DEL_GB='N'
+			WHERE
+				FILE_IDX=#{FILE_IDX}
+		]]>
+	</update>
+	
+</mapper>

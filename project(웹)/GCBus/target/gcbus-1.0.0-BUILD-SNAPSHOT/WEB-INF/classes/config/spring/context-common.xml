@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns:context="http://www.springframework.org/schema/context"
+    xmlns:p="http://www.springframework.org/schema/p"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns="http://www.springframework.org/schema/beans"
+    xmlns:mvc="http://www.springframework.org/schema/mvc"
+    xmlns:cache="http://www.springframework.org/schema/cache"
+    xmlns:aop="http://www.springframework.org/schema/aop"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+                        http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.0.xsd
+                        http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc.xsd
+                        http://www.springframework.org/schema/cache http://www.springframework.org/schema/cache/spring-cache.xsd
+                        http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd">
+	
+	<context:component-scan base-package="com.gebalstory.gcbus">
+		<context:exclude-filter type="annotation" expression="org.springframework.stereotype.Controller"/>
+	</context:component-scan>
+	
+	<aop:aspectj-autoproxy/>
+	<bean id="loggerAspect" class="com.gebalstory.gcbus.common.logger.LoggerAspect"/>
+	
+	<bean id="textRenderer" class="egovframework.rte.ptl.mvc.tags.ui.pagination.DefaultPaginationRenderer"/>  
+    <bean id="paginationManager" class="egovframework.rte.ptl.mvc.tags.ui.pagination.DefaultPaginationManager">
+        <property name="rendererType">
+            <map>
+                <entry key="text" value-ref="textRenderer"/>
+            </map>
+        </property>
+    </bean>
+
+	<!-- ajax JSON parsing 
+	<bean id="jsonView" class="net.sf.json.spring.web.servlet.view.JsonView"/>
+	<bean id="viewResolver" class="org.springframework.web.servlet.view.BeanNameViewResolver">
+	    <property name="order" value="0"></property>
+	</bean>
+    -->
+    
+    <bean class="org.springframework.web.servlet.view.BeanNameViewResolver" p:order="0" />
+	<bean class="org.springframework.web.servlet.view.json.MappingJacksonJsonView" id="jsonView">
+  		<property name="contentType" value="application/json; charset=UTF-8" />
+	</bean>
+    
+	<!-- MultipartResolver 설정 -->
+    <bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+        <property name="maxUploadSize" value="100000000" />
+        <property name="maxInMemorySize" value="100000000" />
+    </bean>   
+</beans>
